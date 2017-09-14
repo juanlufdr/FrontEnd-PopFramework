@@ -1,0 +1,48 @@
+<div id="ejecucion" class="text-justify">
+
+  <h3>{{titulo}}</h3>
+
+  <p>A continuación puede elegir uno de los dos modos de ejecución disponibles:</p>
+  <ol>
+    <li><strong>Rápido: </strong>Realiza el cálculo a partir de la categorización de datasets precargada. (Este método es menos exhaustivo pero
+      su tiempo de ejecución es más rápido)
+    </li>
+    <li><strong>Profundo: </strong>En primer lugar realiza los cálculos para la categorización de datasets y posteriormente, tras seleccionar los indicadores,
+      realiza los cálculos para mostrar las opciones óptimas. (Este método, a pesar de ser más exhaustivo, tiene un tiempo de ejecución mucho más elevado
+    </li>
+  </ol>
+
+  <p>Seleccione uno de los dos métodos: </p>
+
+</div>
+
+<div id="select_ejecucion">
+
+  <button class="btn btn-info" (click)="selectMetodo('rapido')">Método Rápido</button>
+  <button class="btn btn-info" (click)="selectMetodo('profundo')">Método Profundo</button>
+</div>
+
+<div *ngIf="metodo == 'rapido'">
+
+  <h3>Ejecución Rapida</h3>
+
+  <table class="table table-bordered text-center">
+    <tr class="info">
+      <th></th>
+      <th *ngFor="let criterio of criterios">{{criterio}}</th>
+    </tr>
+
+    <tr *ngFor=" let criterio of criterios">
+      <td>{{criterio}}</td>
+      <td *ngFor="let values of reciprocalMatrix, let i= index">{{criterio}}</td>
+    </tr>
+
+  </table>
+
+  <div class="panel panel-success">
+    <div class="panel-heading">Consistencia</div>
+    <div class="panel-body">El ratio de consistencia es de 0%. Mantengalo por debajo del 10%</div>
+  </div>
+
+</div>
+

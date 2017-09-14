@@ -1,0 +1,214 @@
+.container-fluid{
+  padding: 0px;
+}
+
+#border{
+  margin: 50px;
+  border-color: white;
+  border-style: solid;
+  border-radius: 15px;
+  border-width: 5px;
+  /*padding: 200px;*/
+  padding-bottom:250px;
+}
+
+#border #imagen_portada{
+  margin-top: 100px;
+  width: 0px;
+  height: 0px;2
+  padding-left: 200px;
+  padding-top: 100px;
+}
+
+#border #content{
+  margin-top: 200px;
+}
+
+
+#border div img{
+  width: 500px;
+  height: 230px;
+  margin-left: 200px;
+}
+
+
+#portada{
+  background: #2196F3;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  color: white;
+  text-align: center;
+
+}
+
+#container-button{
+  margin-left: 700px;
+
+}
+
+#btn-portada{
+  border-radius: 50px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background: white;
+
+}
+
+#portada h2{
+  /*padding-top: 50px;*/
+  margin-left: 700px;
+  font-size: 40px;
+}
+
+#header{
+  background: #2196F3;
+  margin: 0px;
+  height: 90px;
+  color: white;
+  font-size: 30px;
+  line-height: 80px;
+  text-align: center;
+  font-weight: bold;
+
+}
+
+#nav{
+  background: #64B5F6;
+  height: 45px;
+}
+
+#nav ul{
+  list-style: none;
+
+}
+
+#nav ul li{
+  float: left;
+  font-size: 20px;
+  margin: 0px;
+  margin-right: 20px;
+  padding: 0px;
+  line-height: 45px;
+
+
+}
+
+#nav ul li a{
+  padding: 0px 20px 0px 20px;
+  display: block;
+  color: white;
+  margin: 0px;
+npm   display: block;
+  transition: 300ms;
+  text-decoration: none;
+}
+
+#nav ul li a:hover{
+  font-size: 22px;
+  padding: 0px 30px 0px 30px;
+  color: white;
+  text-decoration: none;
+  background: #2196F3;
+}
+#nav ul li a:link a:visited a:active{
+  text-decoration: none;
+}
+
+
+.activado{
+  text-decoration: none;
+  background: #314543;
+
+}
+
+#section{
+  margin-top: 30px;
+}
+
+#section h3{
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+#img{
+  text-align: center;
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.jumbotron{
+  text-align: center;
+  border-radius: 100px;
+  padding: 30px;
+}
+
+.jumbotron h3{
+  text-align: center;
+  margin-bottom: 0px;
+
+}
+
+.jumbotron p{
+  text-align: justify;
+}
+
+.jumbotron ul{
+  text-align: justify;
+}
+
+#section p{
+  text-align: justify;
+}
+
+.btn{
+  font-size: 20px;
+  margin-right: 15px;
+  border-style: none;
+
+}
+
+#footer{
+  border-top: solid;
+  position: fixed;
+  text-align: center;
+  left: 0px;
+  bottom: 0px;
+  height: 50px;
+  width: 100%;
+  background: #2196F3;
+  color: white;
+  line-height: 45px;
+  /*padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 10px;*/
+}
+
+
+#error h4{
+  margin-top: 70px;
+  margin-bottom: 90px;
+  font-size: 35px;
+}
+
+#ejecucion{
+  font-size: 20px;
+}
+
+#select_ejecucion{
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+#info h3{
+  text-align: left;
+}
+
+#cell-disabled{
+  background: #CCCCCC;
+}
+#fullCell{
+  text-align-last: center;
+  width: 100%;
+}
