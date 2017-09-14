@@ -24,25 +24,84 @@
 
 <div *ngIf="metodo == 'rapido'">
 
+  <!--<ng2-smart-table [settings]="settingsTable"></ng2-smart-table>-->
+
   <h3>Ejecución Rapida</h3>
 
-  <table class="table table-bordered text-center">
-    <tr class="info">
+<!--  <table class="table table-bordered text-center" id="table_row">
+
+      <tr>
+        <th>Eficiencia</th>
+        <th>Tamaño de la Comunidad</th>
+        <th>Involucramiento</th>
+        <th>Reputacion</th>
+        <th>Madurez</th>
+      </tr>
+
+  </table>-->
+  <table class="table table-bordered text-center" >
+    <ng-container *ngFor="let fila of reciprocalMatrix; let i = index">
+    <tr *ngIf="i == '0'">
       <th></th>
-      <th *ngFor="let criterio of criterios">{{criterio}}</th>
+      <th>Eficiencia</th>
+      <th>Tamaño de la Comunidad</th>
+      <th>Involucramiento</th>
+      <th>Reputacion</th>
+      <th>Madurez</th>
     </tr>
 
-    <tr *ngFor=" let criterio of criterios">
-      <td>{{criterio}}</td>
-      <td *ngFor="let values of reciprocalMatrix, let i= index">{{criterio}}</td>
+
+    <tr *ngIf="i == '0'">
+      <th >Eficiencia</th>
+      <ng-container>
+        <th  *ngFor="let opciones of fila"> {{opciones}} </th> <!--ngIf=indice=0-->
+      </ng-container>
+
+
+
     </tr>
+
+    <tr *ngIf="i == '1'">
+      <th >Tamaño de la Comunidad</th>
+      <ng-container>
+        <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+      </ng-container>
+
+    </tr>
+
+      <tr *ngIf="i == '2'">
+        <th >Involucramiento</th>
+        <ng-container>
+          <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+        </ng-container>
+
+      </tr>
+
+      <tr *ngIf="i == '3'">
+        <th >Reputacion</th>
+        <ng-container>
+          <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+        </ng-container>
+
+      </tr>
+
+      <tr *ngIf="i == '4'">
+        <th >Madurez</th>
+        <ng-container>
+          <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+        </ng-container>
+
+      </tr>
+
+    </ng-container>
+
 
   </table>
 
-  <div class="panel panel-success">
+<!--  <div class="panel panel-success">
     <div class="panel-heading">Consistencia</div>
     <div class="panel-body">El ratio de consistencia es de 0%. Mantengalo por debajo del 10%</div>
-  </div>
+  </div>-->
 
 </div>
 

@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import {HomeComponent} from './components/home.component';
 import {InformacionComponent} from './components/infomacion.component';
 import {EjecucionComponent} from "./components/ejecucion.component";
+import {Ng2SmartTableModule} from "ng2-smart-table";
 import {ErrorComponent} from './components/error.component';
 
 //Rutas
@@ -25,6 +26,7 @@ import {routing, appRoutingProviders} from './app.routing';
     BrowserModule,
     FormsModule,
     HttpModule,
+    Ng2SmartTableModule,
     routing
   ],
   providers: [appRoutingProviders],

@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {Ng2SmartTableModule} from "ng2-smart-table";
 import {PeticionesService} from '../services/servicios.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class EjecucionComponent {
   public reciprocalMatrix:Array<any>;
   public criterios:Array<string>;
   public selectOptions:Array<string>;
+  public settingsTable;
 
   constructor(private _peticionesService : PeticionesService){
     this.titulo = "Criterios de comparación AHP";
@@ -27,8 +29,26 @@ export class EjecucionComponent {
     this.reciprocalMatrix = new Array();
     this.selectOptions = ["9","8","7","6","5","4","3","2","1","1/2","1/3","1/4","1/5","1/6","1/7","1/8","1/9"];
     this.criterios = ["Eficiencia", "Tamaño de la Comunidad", "Involucramiento", "Reputacion", "Madurez"];
+    this.settingsTable = {
+        columns: {
+          opcion_1: {
+            title: 'Opcion 1'
+          },
+          opcion_2: {
+            title: 'Opcion 2'
+          },
+          opcion_3: {
+            title: 'Opcion 3'
+          },
+          opcion_: {
+            title: 'Opcion 4'
+          }
+        }
+      };
 
-  }
+
+    }
+
 
   ngOnInit(){
     console.log("Cargado ejecucion.component.ts");
@@ -70,6 +90,8 @@ export class EjecucionComponent {
   }
 
   calculateMatrix(){
+
+    console.log("aqui");
 
     var keys = Object.keys(this.characteristics.contributors);
 

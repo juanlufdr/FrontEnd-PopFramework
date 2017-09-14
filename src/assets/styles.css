@@ -212,3 +212,12 @@ npm   display: block;
   text-align-last: center;
   width: 100%;
 }
+
+#table_row{
+  width:  70% !important;
+
+}
+
+#table_column{
+  width:10% !important;
+}
