@@ -4,11 +4,14 @@
 
   <p>A continuación puede elegir uno de los dos modos de ejecución disponibles:</p>
   <ol>
-    <li><strong>Rápido: </strong>Realiza el cálculo a partir de la categorización de datasets precargada. (Este método es menos exhaustivo pero
+    <li><strong>Rápido: </strong>Realiza el cálculo a partir de la categorización de datasets precargada. (Este método
+      es menos exhaustivo pero
       su tiempo de ejecución es más rápido)
     </li>
-    <li><strong>Profundo: </strong>En primer lugar realiza los cálculos para la categorización de datasets y posteriormente, tras seleccionar los indicadores,
-      realiza los cálculos para mostrar las opciones óptimas. (Este método, a pesar de ser más exhaustivo, tiene un tiempo de ejecución mucho más elevado
+    <li><strong>Profundo: </strong>En primer lugar realiza los cálculos para la categorización de datasets y
+      posteriormente, tras seleccionar los indicadores,
+      realiza los cálculos para mostrar las opciones óptimas. (Este método, a pesar de ser más exhaustivo, tiene un
+      tiempo de ejecución mucho más elevado
     </li>
   </ol>
 
@@ -24,13 +27,12 @@
 
 <div *ngIf="metodo == 'rapido'">
 
-  <!--<ng2-smart-table [settings]="settingsTable"></ng2-smart-table>-->
-
   <h3>Ejecución Rapida</h3>
 
-<!--  <table class="table table-bordered text-center" id="table_row">
-
-      <tr>
+  <table class="table table-bordered text-center">
+    <ng-container *ngFor="let fila of reciprocalMatrix; let i = index">
+      <tr *ngIf="i == '0'">
+        <th></th>
         <th>Eficiencia</th>
         <th>Tamaño de la Comunidad</th>
         <th>Involucramiento</th>
@@ -38,57 +40,95 @@
         <th>Madurez</th>
       </tr>
 
-  </table>-->
-  <table class="table table-bordered text-center" >
-    <ng-container *ngFor="let fila of reciprocalMatrix; let i = index">
-    <tr *ngIf="i == '0'">
-      <th></th>
-      <th>Eficiencia</th>
-      <th>Tamaño de la Comunidad</th>
-      <th>Involucramiento</th>
-      <th>Reputacion</th>
-      <th>Madurez</th>
-    </tr>
+
+      <tr *ngIf="i == '0'">
+        <th>Eficiencia</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="j <= i">
+            {{opciones | fraction}}
+          </th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select #valor (change)="changeValue(i, j, valor.value)">
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
+            </th>
+          </ng-container>
+
+          <!--<th  >{{opciones}} </th> ngIf=indice=0-->
+        </ng-container>
 
 
-    <tr *ngIf="i == '0'">
-      <th >Eficiencia</th>
-      <ng-container>
-        <th  *ngFor="let opciones of fila"> {{opciones}} </th> <!--ngIf=indice=0-->
-      </ng-container>
+      </tr>
 
+      <tr *ngIf="i == '1'">
+        <th>Tamaño de la Comunidad</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="j <= i">
+            {{opciones | fraction}}
+          </th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select #valor (change)="changeValue(i, j, valor.value)">
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
+            </th>
+          </ng-container>
+        </ng-container>
 
-
-    </tr>
-
-    <tr *ngIf="i == '1'">
-      <th >Tamaño de la Comunidad</th>
-      <ng-container>
-        <th  *ngFor="let opciones of fila"> {{opciones}} </th>
-      </ng-container>
-
-    </tr>
+      </tr>
 
       <tr *ngIf="i == '2'">
-        <th >Involucramiento</th>
-        <ng-container>
-          <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+        <th>Involucramiento</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="j <= i">{{opciones | fraction}}</th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select #valor (change)="changeValue(i, j, valor.value)">
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
+            </th>
+          </ng-container>
         </ng-container>
 
       </tr>
 
       <tr *ngIf="i == '3'">
-        <th >Reputacion</th>
-        <ng-container>
-          <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+        <th>Reputacion</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="j <= i">{{opciones | fraction}}</th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select #valor (change)="changeValue(i, j, valor.value)">
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
+            </th>
+          </ng-container>
         </ng-container>
 
       </tr>
 
       <tr *ngIf="i == '4'">
-        <th >Madurez</th>
-        <ng-container>
-          <th  *ngFor="let opciones of fila"> {{opciones}} </th>
+        <th>Madurez</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="j <= i">{{opciones | fraction}}</th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select #valor (change)="changeValue(i, j, valor.value)">
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
+            </th>
+          </ng-container>
         </ng-container>
 
       </tr>
@@ -98,10 +138,10 @@
 
   </table>
 
-<!--  <div class="panel panel-success">
+  <div class="panel panel-success">
     <div class="panel-heading">Consistencia</div>
     <div class="panel-body">El ratio de consistencia es de 0%. Mantengalo por debajo del 10%</div>
-  </div>-->
+  </div>
 
 </div>
 

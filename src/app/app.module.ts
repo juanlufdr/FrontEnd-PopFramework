@@ -9,6 +9,7 @@ import {InformacionComponent} from './components/infomacion.component';
 import {EjecucionComponent} from "./components/ejecucion.component";
 import {Ng2SmartTableModule} from "ng2-smart-table";
 import {ErrorComponent} from './components/error.component';
+import {FractionPipe} from "./pipes/fraction.pipe";
 
 //Rutas
 import {routing, appRoutingProviders} from './app.routing';
@@ -16,6 +17,7 @@ import {routing, appRoutingProviders} from './app.routing';
 
 @NgModule({
   declarations: [
+    FractionPipe,
     AppComponent,
     HomeComponent,
     InformacionComponent,

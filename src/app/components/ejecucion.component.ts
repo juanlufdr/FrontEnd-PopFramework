@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {Ng2SmartTableModule} from "ng2-smart-table";
 import {PeticionesService} from '../services/servicios.service';
+import {FractionPipe} from "../pipes/fraction.pipe";
 
 @Component({
   selector: 'ejecucion',
@@ -292,6 +293,27 @@ console.log("array");
 
     console.log("Reciprocal Matrix");
     console.log(this.reciprocalMatrix);
+  }
+
+  changeValue(i, j, value){
+    //alert("Posicion : "+ i +", "+ j+ ". Valor --> " + value);
+
+    //var Fraction = require('fractional').Fraction;
+
+    var selectValue = value.split("/");
+    var number;
+
+    if(selectValue.length>1){
+      let number1 = parseInt(selectValue[0]);
+      let number2 = parseInt(selectValue[1]);
+      number = number2;
+    }else{
+      number = 1/parseInt(selectValue[0]);
+    }
+
+    this.reciprocalMatrix[j][i] = number;
+
+    //alert(number.toFixed(2));
   }
 
 }
