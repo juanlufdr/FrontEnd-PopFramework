@@ -124,6 +124,7 @@ npm   display: block;
 
 #section{
   margin-top: 30px;
+  margin-bottom: 75px;<
 }
 
 #section h3{
@@ -170,7 +171,7 @@ npm   display: block;
 
 #footer{
   border-top: solid;
-  position: fixed;
+  position: relative;
   text-align: center;
   left: 0px;
   bottom: 0px;
