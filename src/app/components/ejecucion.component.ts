@@ -20,7 +20,6 @@ export class EjecucionComponent {
   public reciprocalMatrix:Array<any>;
   public criterios:Array<string>;
   public selectOptions:Array<string>;
-  public settingsTable;
 
   constructor(private _peticionesService : PeticionesService){
     this.titulo = "Criterios de comparación AHP";
@@ -30,23 +29,6 @@ export class EjecucionComponent {
     this.reciprocalMatrix = new Array();
     this.selectOptions = ["9","8","7","6","5","4","3","2","1","1/2","1/3","1/4","1/5","1/6","1/7","1/8","1/9"];
     this.criterios = ["Eficiencia", "Tamaño de la Comunidad", "Involucramiento", "Reputacion", "Madurez"];
-    this.settingsTable = {
-        columns: {
-          opcion_1: {
-            title: 'Opcion 1'
-          },
-          opcion_2: {
-            title: 'Opcion 2'
-          },
-          opcion_3: {
-            title: 'Opcion 3'
-          },
-          opcion_: {
-            title: 'Opcion 4'
-          }
-        }
-      };
-
 
     }
 
@@ -285,7 +267,11 @@ console.log("array");
     for(var i=0; i< 5; i++){
       var data = new Array();
       for(var j=0; j< 5; j++){
-        data[j]= 1;
+        var object = {
+          "id": j,
+          "value": 1
+        }
+        data.push(object);
       }
 
       this.reciprocalMatrix.push(data);
@@ -295,23 +281,30 @@ console.log("array");
     console.log(this.reciprocalMatrix);
   }
 
-  changeValue(i, j, value){
+  changeValue(index1, index2, $event){
     //alert("Posicion : "+ i +", "+ j+ ". Valor --> " + value);
 
     //var Fraction = require('fractional').Fraction;
 
-    var selectValue = value.split("/");
-    var number;
+    // var selectValue = value.split("/");
+    // var number;
 
-    if(selectValue.length>1){
-      let number1 = parseInt(selectValue[0]);
-      let number2 = parseInt(selectValue[1]);
-      number = number2;
-    }else{
-      number = 1/parseInt(selectValue[0]);
-    }
+    // if(selectValue.length>1){
+    //   let number1 = parseInt(selectValue[0]);
+    //   let number2 = parseInt(selectValue[1]);
+    //   number = number2;
+    // }else{
+    //   number = 1/parseInt(selectValue[0]);
+    // }
 
-    this.reciprocalMatrix[j][i] = number;
+    // this.reciprocalMatrix[j][i] = number;
+    // this.reciprocalMatrix[i][j] = number;
+
+    this.reciprocalMatrix[index2][index1].value = $event;
+    this.reciprocalMatrix[index2][index1].value = parseFloat(this.reciprocalMatrix[index2][index1].value);
+
+    console.log("MAAATRIZ");
+    console.log(this.reciprocalMatrix);
 
     //alert(number.toFixed(2));
   }
