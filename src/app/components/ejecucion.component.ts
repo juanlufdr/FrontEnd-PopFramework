@@ -282,31 +282,25 @@ console.log("array");
   }
 
   changeValue(index1, index2, $event){
-    //alert("Posicion : "+ i +", "+ j+ ". Valor --> " + value);
 
-    //var Fraction = require('fractional').Fraction;
 
-    // var selectValue = value.split("/");
-    // var number;
+    var selectValue = $event.split("/");
+    var number;
 
-    // if(selectValue.length>1){
-    //   let number1 = parseInt(selectValue[0]);
-    //   let number2 = parseInt(selectValue[1]);
-    //   number = number2;
-    // }else{
-    //   number = 1/parseInt(selectValue[0]);
-    // }
+    if(selectValue.length>1){
+      let number1 = parseInt(selectValue[0]);
+      let number2 = parseInt(selectValue[1]);
+      number = number2;
+    }else{
+      number = 1/parseInt(selectValue[0]);
+    }
 
-    // this.reciprocalMatrix[j][i] = number;
-    // this.reciprocalMatrix[i][j] = number;
+    this.reciprocalMatrix[index2][index1].value = number;
+    
 
-    this.reciprocalMatrix[index2][index1].value = $event;
-    this.reciprocalMatrix[index2][index1].value = parseFloat(this.reciprocalMatrix[index2][index1].value);
+    // console.log("MAAATRIZ");
+    // console.log(this.reciprocalMatrix);
 
-    console.log("MAAATRIZ");
-    console.log(this.reciprocalMatrix);
-
-    //alert(number.toFixed(2));
   }
 
 }

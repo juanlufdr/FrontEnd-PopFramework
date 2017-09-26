@@ -7,14 +7,19 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FractionPipe implements PipeTransform{
   transform(value){
 
-/*    let arrayNumber = value.split("/");
+    console.log("Filtro fraction");
 
-    if(arrayNumber.length>1){
-      let aux1 = arrayNumber[0];
-      let aux2 = arrayNumber[2];
+    
 
-      let number = value.toFixed(2);
-    }*/
+    // if(typeof value == 'string'){
+
+    //   let arrayValue = value.split("/");
+    //   if(arrayValue.length ==1){
+    //     value = parseFloat(value);
+    //   }else{
+    //     value = parseFloat(arrayValue[0])/parseFloat(arrayValue[1]);
+    //   }
+    // }
 
     let number = value.toFixed(2);
 

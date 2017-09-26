@@ -71,7 +71,7 @@
           <ng-container *ngIf="j>i">
             <th>
               <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
-                <option *ngFor="let values of selectOptions, let k = index">
+                <option *ngFor="let values of selectOptions">
                   {{values}}
                 </option>
               </select>
@@ -137,58 +137,6 @@
               </ng-container>
       
             </tr>
-
-      <!-- <tr *ngIf="i == '2'">
-        <th>Involucramiento</th>
-        <ng-container *ngFor="let opciones of fila; let j = index">
-          <th *ngIf="j <= i">{{opciones | fraction}}</th>
-          <ng-container *ngIf="j>i">
-            <th>
-              <select #valor (change)="changeValue(i, j, valor.value)">
-                <option *ngFor="let values of selectOptions, let k = index">
-                  {{values}}
-                </option>
-              </select>
-            </th>
-          </ng-container>
-        </ng-container>
-
-      </tr>
-
-      <tr *ngIf="i == '3'">
-        <th>Reputacion</th>
-        <ng-container *ngFor="let opciones of fila; let j = index">
-          <th *ngIf="j <= i">{{opciones | fraction}}</th>
-          <ng-container *ngIf="j>i">
-            <th>
-              <select #valor (change)="changeValue(i, j, valor.value)">
-                <option *ngFor="let values of selectOptions, let k = index">
-                  {{values}}
-                </option>
-              </select>
-            </th>
-          </ng-container>
-        </ng-container>
-
-      </tr>
-
-      <tr *ngIf="i == '4'">
-        <th>Madurez</th>
-        <ng-container *ngFor="let opciones of fila; let j = index">
-          <th *ngIf="j <= i">{{opciones | fraction}}</th>
-          <ng-container *ngIf="j>i">
-            <th>
-              <select #valor (change)="changeValue(i, j, valor.value)">
-                <option *ngFor="let values of selectOptions, let k = index">
-                  {{values}}
-                </option>
-              </select>
-            </th>
-          </ng-container>
-        </ng-container>
-
-      </tr>
--->
     </ng-container> 
 
 
