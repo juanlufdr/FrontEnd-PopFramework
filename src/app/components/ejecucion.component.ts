@@ -57,6 +57,7 @@ export class EjecucionComponent {
     this._peticionesService.getReferecences().subscribe(
       callbackOk => {
         this.references = callbackOk;
+        ""
         //console.log(this.references);
       },
       callbackKo => {
@@ -243,6 +244,7 @@ export class EjecucionComponent {
     this.normalizeMatrix = array;
 
 
+    console.log("-----MATRIZ NORMALIZADA");
     console.log(this.normalizeMatrix);
 
     this.initReciprocalMatrix();
@@ -422,11 +424,34 @@ export class EjecucionComponent {
     //console.log("CR -->" + this.consistencia);
 
     this.consistencia = ((this.consistencia / 1.12) * 100).toFixed(0);
+  }
 
+  calcularResultados(){
 
+    var indicatorPriorityVector = this.normalizeMatrix.slice(0,this.normalizeMatrix.length);
 
+    // ponderamos el vector normalizado con el vector promedio
+    for(var i=0; i< indicatorPriorityVector.length; i++){
+      for(var j=0; j<indicatorPriorityVector[i].length; j++){
+        indicatorPriorityVector[i][j] = indicatorPriorityVector[i][j]/ this.vectorPromedio[i];
+      }
+    }
 
+    var resultados = new Array();
 
+    //calculamos los resultados
+
+    for(var i=0; i< indicatorPriorityVector.length; i++){
+      var resultadoParcial =0;
+      for(var j=0; j<indicatorPriorityVector[i].length; j++){
+        resultadoParcial = resultadoParcial + indicatorPriorityVector[i][j];
+      }
+      resultados.push(resultadoParcial);
+    }
+
+    // tratar resultados para la vista
+
+    
 
   }
 
