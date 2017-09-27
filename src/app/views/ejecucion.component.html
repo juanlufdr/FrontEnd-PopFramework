@@ -45,13 +45,13 @@
         <th>Eficiencia</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id<=i">
-            {{opciones.value | fraction}}
+            {{opciones.value}}
           </th>
           <ng-container *ngIf="j>i">
             <th>
               <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
                 <option *ngFor="let values of selectOptions">
-                  {{values}}
+                  {{values }}
                 </option>
               </select>
             </th>
@@ -66,7 +66,7 @@
         <th>Tamaño de la Comunidad</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
-            {{opciones.value | fraction}}
+            {{opciones.value}}
           </th>
           <ng-container *ngIf="j>i">
             <th>
@@ -85,7 +85,7 @@
           <th>Involucramiento</th>
           <ng-container *ngFor="let opciones of fila; let j = index">
             <th *ngIf="opciones.id <= i">
-              {{opciones.value | fraction}}
+              {{opciones.value }}
             </th>
             <ng-container *ngIf="j>i">
               <th>
@@ -104,7 +104,7 @@
             <th>Reputacion</th>
             <ng-container *ngFor="let opciones of fila; let j = index">
               <th *ngIf="opciones.id <= i">
-                {{opciones.value | fraction}}
+                {{opciones.value}}
               </th>
               <ng-container *ngIf="j>i">
                 <th>
@@ -123,7 +123,7 @@
               <th>Madurez</th>
               <ng-container *ngFor="let opciones of fila; let j = index">
                 <th *ngIf="opciones.id <= i">
-                  {{opciones.value | fraction}}
+                  {{opciones.value}}
                 </th>
                 <ng-container *ngIf="j>i">
                   <th>
@@ -142,9 +142,14 @@
 
   </table>
 
-  <div class="panel panel-success">
+  <div class="panel panel-success" *ngIf="consistencia<=10">
     <div class="panel-heading">Consistencia</div>
-    <div class="panel-body">El ratio de consistencia es de 0%. Mantengalo por debajo del 10%</div>
+    <div class="panel-body">El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
+  </div>
+
+  <div class="panel panel-danger" *ngIf="consistencia>10">
+    <div class="panel-heading">Consistencia</div>
+    <div class="panel-body">El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
   </div>
 
 </div>

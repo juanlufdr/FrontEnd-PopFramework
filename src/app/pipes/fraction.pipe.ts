@@ -11,15 +11,15 @@ export class FractionPipe implements PipeTransform{
 
     
 
-    // if(typeof value == 'string'){
+    if(typeof value == 'string'){
 
-    //   let arrayValue = value.split("/");
-    //   if(arrayValue.length ==1){
-    //     value = parseFloat(value);
-    //   }else{
-    //     value = parseFloat(arrayValue[0])/parseFloat(arrayValue[1]);
-    //   }
-    // }
+      let arrayValue = value.split("/");
+      if(arrayValue.length ==1){
+        value = parseFloat(value);
+      }else{
+        value = parseFloat(arrayValue[0])/parseFloat(arrayValue[1]);
+      }
+    }
 
     let number = value.toFixed(2);
 
