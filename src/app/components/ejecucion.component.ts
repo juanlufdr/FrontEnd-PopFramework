@@ -3,6 +3,7 @@ import { Ng2SmartTableModule } from "ng2-smart-table";
 import { PeticionesService } from '../services/servicios.service';
 import { FractionPipe } from "../pipes/fraction.pipe";
 
+
 @Component({
   selector: 'ejecucion',
   templateUrl: '../views/ejecucion.component.html',
@@ -23,6 +24,9 @@ export class EjecucionComponent {
   public finalNormalizeArray: Array<any>;
   public vectorPromedio: Array<any>;
   public consistencia;
+  public resultadoObject;
+  public mostrarResultados;
+  public cargando;
 
   constructor(private _peticionesService: PeticionesService) {
     this.titulo = "Criterios de comparación AHP";
@@ -35,25 +39,79 @@ export class EjecucionComponent {
     this.finalNormalizeArray = new Array();
     this.vectorPromedio = new Array();
     this.consistencia = 0;
+    this.resultadoObject = new Array();
+    this.mostrarResultados = false;
+    this.cargando == false;
 
   }
 
 
   ngOnInit() {
     console.log("Cargado ejecucion.component.ts");
-    this.calculateMeasures();
 
-    setTimeout(() => {
-      this.calculateMatrix();
-    }, 150);
 
   }
 
   selectMetodo(metodo) {
     this.metodo = metodo;
+    this.cargando = true;
+    if(metodo == 'rapido'){
+      this.calculateMeasuserLocal();
+    }else{
+      this.calculateMeasuresRemote();
+    }
   }
 
-  calculateMeasures() {
+  calculateMeasuserLocal(){
+    this.localJson();
+    
+    setTimeout(() => {
+      this.calculateMatrix();
+    }, 150);
+  }
+
+  calculateMeasuresRemote(){
+    console.log("Entra en calculo remoto");
+    this.remoteJson();
+    
+    setTimeout(() => {
+      this.calculateMatrix();
+    }, 10000);
+  }
+
+  remoteJson(){
+
+    this._peticionesService.getReferecencesRemote().subscribe(
+      result=> {
+        this.references = result;
+      },
+      error => {
+        var errorMsg = error;
+        if(errorMsg !== null){
+          console.log(errorMsg);
+          alert("Error en la petición a references");
+        }
+      }
+      
+    );
+
+    this._peticionesService.getCharacteristicsRemote().subscribe(
+      result=> {
+        this.characteristics = result;
+      },
+      error => {
+        var errorMsg = error;
+        if(errorMsg !== null){
+          console.log(errorMsg);
+          alert("Error en la petición a characteristics");
+        }
+      }
+    );
+
+
+  }
+
+  localJson() {
     this._peticionesService.getReferecences().subscribe(
       callbackOk => {
         this.references = callbackOk;
@@ -285,6 +343,7 @@ export class EjecucionComponent {
       this.reciprocalMatrix.push(data);
     }
 
+    this.cargando = false;
     console.log("Reciprocal Matrix");
     console.log(this.reciprocalMatrix);
   }
@@ -372,6 +431,7 @@ export class EjecucionComponent {
     //var arrayAux = new Array();
     for (var i = 0; i < this.reciprocalMatrix.length; i++) {
       var auxArray = new Array();
+
       for (var j = 0; j < this.reciprocalMatrix[i].length; j++) {
         auxArray.push(this.reciprocalMatrix[i][j].value);
       }
@@ -390,7 +450,7 @@ export class EjecucionComponent {
     }
 
     // OK HASTA AQUI
-    // creamos la matriz normalizada 
+    // creamos la matriz normalizada
     for (var i = 0; i < this.reciprocalMatrix.length; i++) {
       for (var j = 0; j < this.reciprocalMatrix[i].length; j++) {
         var normalizeValue = this.reciprocalMatrix[j][i].value / arraySuma[i];
@@ -426,14 +486,14 @@ export class EjecucionComponent {
     this.consistencia = ((this.consistencia / 1.12) * 100).toFixed(0);
   }
 
-  calcularResultados(){
+  calcularResultados() {
 
-    var indicatorPriorityVector = this.normalizeMatrix.slice(0,this.normalizeMatrix.length);
+    var indicatorPriorityVector = this.normalizeMatrix.slice(0, this.normalizeMatrix.length);
 
     // ponderamos el vector normalizado con el vector promedio
-    for(var i=0; i< indicatorPriorityVector.length; i++){
-      for(var j=0; j<indicatorPriorityVector[i].length; j++){
-        indicatorPriorityVector[i][j] = indicatorPriorityVector[i][j]/ this.vectorPromedio[i];
+    for (var i = 0; i < indicatorPriorityVector.length; i++) {
+      for (var j = 0; j < indicatorPriorityVector[i].length; j++) {
+        indicatorPriorityVector[i][j] = indicatorPriorityVector[i][j] / this.vectorPromedio[i];
       }
     }
 
@@ -441,9 +501,9 @@ export class EjecucionComponent {
 
     //calculamos los resultados
 
-    for(var i=0; i< indicatorPriorityVector.length; i++){
-      var resultadoParcial =0;
-      for(var j=0; j<indicatorPriorityVector[i].length; j++){
+    for (var i = 0; i < indicatorPriorityVector.length; i++) {
+      var resultadoParcial = 0;
+      for (var j = 0; j < indicatorPriorityVector[i].length; j++) {
         resultadoParcial = resultadoParcial + indicatorPriorityVector[i][j];
       }
       resultados.push(resultadoParcial);
@@ -451,7 +511,51 @@ export class EjecucionComponent {
 
     // tratar resultados para la vista
 
-    
+    for (var i = 0; i < resultados.length; i++) {
+      switch (i) {
+        case 0:
+          var object = {
+            'id': 'Eficiencia',
+            'value': resultados[0]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 1:
+          var object = {
+            'id': 'Tamaño de la comunidad',
+            'value': resultados[1]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 2:
+          var object = {
+            'id': 'Involucramiento',
+            'value': resultados[2]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 3:
+          var object = {
+            'id': 'Reputacion',
+            'value': resultados[3]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 4:
+          var object = {
+            'id': 'Madurez',
+            'value': resultados[4]
+          };
+          this.resultadoObject.push(object);
+          break;
+      }
+    }
+
+    this.resultadoObject.sort(function(a,b){
+      return (b.value - a.value);
+    });
+
+    this.mostrarResultados = true;
 
   }
 

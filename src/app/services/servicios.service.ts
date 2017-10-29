@@ -1,17 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Http, Response, Headers} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
+import "rxjs/add/operator/map";
+import {Observable} from "rxjs/Observable";
+
 
 @Injectable()
-
 export class PeticionesService{
 
-  public url:string;
 
-  constructor(private _http : Http){
-    this.url = "https://jsonplaceholder.typicode.com/posts";
-  }
+  constructor(private _http : Http){}
 
   getReferecences(){
     return this._http.request("../../assets/json/references.json")
@@ -21,5 +18,24 @@ export class PeticionesService{
   getCharacteristics(){
     return this._http.request("../../assets/json/characteristics.json")
       .map(respuestaOK => respuestaOK.json());
+  }
+
+  getReferecencesRemote():Observable<any>{
+
+
+    return this._http.get("http://localhost:8080/firstMatrix")
+    .map(res => res.json());
+  }
+
+  getCharacteristicsRemote(){
+
+      return this._http.get("http://localhost:8080/secondMatrix")
+      .map(res => res.json());
+
+     
+      // return this._http.get('http://localhost:8080/secondMatrix').map((response:Response) => {
+      //  console.log(response.json());
+      //  response.json();
+   //});
   }
 }

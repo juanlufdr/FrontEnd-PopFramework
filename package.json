@@ -21,8 +21,10 @@
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
+    "angular2-busy": "^2.0.4",
     "core-js": "^2.4.1",
     "fractional": "^1.0.0",
+    "ng-circle-progress": "^0.9.5",
     "ng2-smart-table": "^1.2.2",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"

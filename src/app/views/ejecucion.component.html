@@ -4,14 +4,12 @@
 
   <p>A continuación puede elegir uno de los dos modos de ejecución disponibles:</p>
   <ol>
-    <li><strong>Rápido: </strong>Realiza el cálculo a partir de la categorización de datasets precargada. (Este método
-      es menos exhaustivo pero
-      su tiempo de ejecución es más rápido)
+    <li><strong>Rápido: </strong>Realiza el cálculo a partir de la categorización de datasets precargada. (Este método es menos
+      exhaustivo pero su tiempo de ejecución es más rápido)
     </li>
-    <li><strong>Profundo: </strong>En primer lugar realiza los cálculos para la categorización de datasets y
-      posteriormente, tras seleccionar los indicadores,
-      realiza los cálculos para mostrar las opciones óptimas. (Este método, a pesar de ser más exhaustivo, tiene un
-      tiempo de ejecución mucho más elevado
+    <li><strong>Profundo: </strong>En primer lugar realiza los cálculos para la categorización de datasets y posteriormente,
+      tras seleccionar los indicadores, realiza los cálculos para mostrar las opciones óptimas. (Este método, a pesar de
+      ser más exhaustivo, tiene un tiempo de ejecución mucho más elevado
     </li>
   </ol>
 
@@ -25,11 +23,14 @@
   <button class="btn btn-info" (click)="selectMetodo('profundo')">Método Profundo</button>
 </div>
 
-<div *ngIf="metodo == 'rapido'">
+<div>
 
-  <h3>Ejecución Rapida</h3>
+  <h3  *ngIf="metodo == 'rapido'">Ejecución Rapida</h3>
+  <h3  *ngIf="metodo == 'profundo'">Ejecución Profunda</h3>
 
-  <table class="table table-bordered text-center">
+  <h4 class="text-center" *ngIf="cargando">Cargando indicadores, espere por favor</h4>
+
+  <table *ngIf="!cargando" class="table table-bordered text-center">
     <ng-container *ngFor="let fila of reciprocalMatrix; let i = index">
       <tr *ngIf="i == '0'">
         <th></th>
@@ -82,62 +83,62 @@
       </tr>
 
       <tr *ngIf="i == '2'">
-          <th>Involucramiento</th>
-          <ng-container *ngFor="let opciones of fila; let j = index">
-            <th *ngIf="opciones.id <= i">
-              {{opciones.value }}
-            </th>
-            <ng-container *ngIf="j>i">
-              <th>
-                <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
+        <th>Involucramiento</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="opciones.id <= i">
+            {{opciones.value }}
+          </th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
                   <option *ngFor="let values of selectOptions, let k = index">
                     {{values}}
                   </option>
                 </select>
-              </th>
-            </ng-container>
+            </th>
           </ng-container>
-  
-        </tr>
+        </ng-container>
 
-        <tr *ngIf="i == '3'">
-            <th>Reputacion</th>
-            <ng-container *ngFor="let opciones of fila; let j = index">
-              <th *ngIf="opciones.id <= i">
-                {{opciones.value}}
-              </th>
-              <ng-container *ngIf="j>i">
-                <th>
-                  <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
+      </tr>
+
+      <tr *ngIf="i == '3'">
+        <th>Reputacion</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="opciones.id <= i">
+            {{opciones.value}}
+          </th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
                     <option *ngFor="let values of selectOptions, let k = index">
                       {{values}}
                     </option>
                   </select>
-                </th>
-              </ng-container>
-            </ng-container>
-    
-          </tr>
+            </th>
+          </ng-container>
+        </ng-container>
 
-          <tr *ngIf="i == '4'">
-              <th>Madurez</th>
-              <ng-container *ngFor="let opciones of fila; let j = index">
-                <th *ngIf="opciones.id <= i">
-                  {{opciones.value}}
-                </th>
-                <ng-container *ngIf="j>i">
-                  <th>
-                    <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
+      </tr>
+
+      <tr *ngIf="i == '4'">
+        <th>Madurez</th>
+        <ng-container *ngFor="let opciones of fila; let j = index">
+          <th *ngIf="opciones.id <= i">
+            {{opciones.value}}
+          </th>
+          <ng-container *ngIf="j>i">
+            <th>
+              <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
                       <option *ngFor="let values of selectOptions, let k = index">
                         {{values}}
                       </option>
                     </select>
-                  </th>
-                </ng-container>
-              </ng-container>
-      
-            </tr>
-    </ng-container> 
+            </th>
+          </ng-container>
+        </ng-container>
+
+      </tr>
+    </ng-container>
 
 
   </table>
@@ -152,5 +153,43 @@
     <div class="panel-body">El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
   </div>
 
-</div>
+  <button class="btn btn-info" (click)="calcularResultados()">Método Rápido</button>
 
+  <table *ngIf="mostrarResultados">
+    <ng-container *ngFor="let res of resultadoObject; let i = index">
+
+      <tr *ngIf="i==0">
+        <th>Resultados</th>
+        <th>Valor</th>
+      </tr>
+
+      <tr *ngIf="i==0">
+        <th>1 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==1">
+        <th>2 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==2">
+        <th>3 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==3">
+        <th>3 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==4">
+        <th>4 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+    </ng-container>
+
+
+  </table>
+
+</div>
