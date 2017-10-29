@@ -143,19 +143,24 @@
 
   </table>
 
-  <div class="panel panel-success" *ngIf="consistencia<=10">
+  <div class="panel panel-success" *ngIf="consistencia<=10 && mostrarBotonCalculo">
+    <div class="panel-heading">Consistencia</div>
+    <div class="panel-body" >El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
+  </div>
+
+  <div class="panel panel-danger" *ngIf="consistencia>10 && mostrarBotonCalculo">
     <div class="panel-heading">Consistencia</div>
     <div class="panel-body">El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
   </div>
 
-  <div class="panel panel-danger" *ngIf="consistencia>10">
-    <div class="panel-heading">Consistencia</div>
-    <div class="panel-body">El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
-  </div>
 
-  <button class="btn btn-info" (click)="calcularResultados()">Método Rápido</button>
+  <div id="select_ejecucion"  *ngIf="mostrarBotonCalculo">
+    
+    <button class="btn btn-info" (click)="calcularResultados()">Calcular resultados</button>
+    </div>
+  
 
-  <table *ngIf="mostrarResultados">
+  <table *ngIf="mostrarResultados" class="table table-bordered text-center">
     <ng-container *ngFor="let res of resultadoObject; let i = index">
 
       <tr *ngIf="i==0">

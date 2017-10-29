@@ -32,10 +32,12 @@ export class PeticionesService{
       return this._http.get("http://localhost:8080/secondMatrix")
       .map(res => res.json());
 
-     
-      // return this._http.get('http://localhost:8080/secondMatrix').map((response:Response) => {
-      //  console.log(response.json());
-      //  response.json();
-   //});
   }
+
+  procesar(){
+    
+          return this._http.get("http://localhost:8080/procesar")
+          .map(res => res.json());
+    
+      }
 }

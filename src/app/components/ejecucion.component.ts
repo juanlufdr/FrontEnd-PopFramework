@@ -27,6 +27,7 @@ export class EjecucionComponent {
   public resultadoObject;
   public mostrarResultados;
   public cargando;
+  public mostrarBotonCalculo;
 
   constructor(private _peticionesService: PeticionesService) {
     this.titulo = "Criterios de comparación AHP";
@@ -42,6 +43,7 @@ export class EjecucionComponent {
     this.resultadoObject = new Array();
     this.mostrarResultados = false;
     this.cargando == false;
+    this.mostrarBotonCalculo = false;
 
   }
 
@@ -72,14 +74,33 @@ export class EjecucionComponent {
 
   calculateMeasuresRemote(){
     console.log("Entra en calculo remoto");
-    this.remoteJson();
+    this.remoteJsonProcesar();
     
-    setTimeout(() => {
-      this.calculateMatrix();
-    }, 10000);
+  }
+
+  remoteJsonProcesar(){
+    this._peticionesService.procesar().subscribe(
+      result=> {
+        if(result == true){
+          this.remoteJson();
+        }else{
+          console.log("Error en procesar");
+        }
+      },
+      error => {
+        var errorMsg = error;
+        if(errorMsg !== null){
+          console.log(errorMsg);
+          alert("Error en el procesamiento");
+        }
+      }
+      
+    );
   }
 
   remoteJson(){
+
+
 
     this._peticionesService.getReferecencesRemote().subscribe(
       result=> {
@@ -108,6 +129,9 @@ export class EjecucionComponent {
       }
     );
 
+    setTimeout(() => {
+      this.calculateMatrix();
+    }, 10000);
 
   }
 
@@ -344,6 +368,7 @@ export class EjecucionComponent {
     }
 
     this.cargando = false;
+    this.mostrarBotonCalculo = true;
     console.log("Reciprocal Matrix");
     console.log(this.reciprocalMatrix);
   }
