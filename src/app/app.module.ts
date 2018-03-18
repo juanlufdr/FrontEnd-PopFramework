@@ -4,15 +4,16 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule, JsonpModule} from '@angular/http';
 
 import { AppComponent } from './app.component';
-import {HomeComponent} from './components/home.component';
-import {InformacionComponent} from './components/infomacion.component';
-import {EjecucionComponent} from "./components/ejecucion.component";
-import {Ng2SmartTableModule} from "ng2-smart-table";
-import {ErrorComponent} from './components/error.component';
-import {FractionPipe} from "./pipes/fraction.pipe";
+
 
 //Rutas
 import {routing, appRoutingProviders} from './app.routing';
+import { FractionPipe } from './pipes/fraction.pipe';
+import { HomeComponent } from './components/home/home.component';
+import { InformacionComponent } from './components/info/infomacion.component';
+import { EjecucionComponent } from './components/execution/ejecucion.component';
+import { ErrorComponent } from './components/error/error.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
 @NgModule({

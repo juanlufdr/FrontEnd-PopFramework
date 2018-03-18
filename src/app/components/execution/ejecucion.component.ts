@@ -1,17 +1,16 @@
-import { Component } from "@angular/core";
-import { Ng2SmartTableModule } from "ng2-smart-table";
-import { PeticionesService } from '../services/servicios.service';
-import { FractionPipe } from "../pipes/fraction.pipe";
+import { Component, OnInit } from "@angular/core";
+import { PeticionesService } from "../../services/servicios.service";
 
 
 @Component({
   selector: 'ejecucion',
-  templateUrl: '../views/ejecucion.component.html',
+  templateUrl: './ejecucion.component.html',
+  styleUrls: ['./ejecucion.component.scss'],
   providers: [PeticionesService]
 })
 
 
-export class EjecucionComponent {
+export class EjecucionComponent implements OnInit {
   public titulo: string;
   public metodo: string;
   public references;

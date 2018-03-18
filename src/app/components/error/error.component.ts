@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 @Component({
   selector: 'error',
-  templateUrl: '../views/error.component.html'
+  templateUrl: './error.component.html',
+  styleUrls: ['./error.component.scss']
 })
 
 export class ErrorComponent{
