@@ -2,25 +2,25 @@
 
   <h3>{{titulo}}</h3>
 
-  <p>A continuación puede elegir uno de los dos modos de ejecución disponibles:</p>
+  <p>You can then choose one of the two available execution modes:</p>
   <ol>
-    <li><strong>Rápido: </strong>Realiza el cálculo a partir de la categorización de datasets precargada. (Este método es menos
-      exhaustivo pero su tiempo de ejecución es más rápido)
+    <li><strong>Fast: </strong>Perform the calculation from the categorization of preloaded datasets. (This method is less
+      exhaustive but its execution time is faster)
     </li>
-    <li><strong>Profundo: </strong>En primer lugar realiza los cálculos para la categorización de datasets y posteriormente,
-      tras seleccionar los indicadores, realiza los cálculos para mostrar las opciones óptimas. (Este método, a pesar de
-      ser más exhaustivo, tiene un tiempo de ejecución mucho más elevado
+    <li><strong>Deep: </strong>First, it performs the calculations for the categorization of datasets and later,
+            After selecting the indicators, perform the calculations to show the optimal options. (This method, despite
+            be more exhaustive, it has a much higher execution time
     </li>
   </ol>
 
-  <p>Seleccione uno de los dos métodos: </p>
+  <p>Select one of the two methods: </p>
 
 </div>
 
 <div id="select_ejecucion">
 
-  <button class="btn btn-info" (click)="selectMetodo('rapido')">Método Rápido</button>
-  <button class="btn btn-info" (click)="selectMetodo('profundo')">Método Profundo</button>
+  <button class="btn btn-info" (click)="selectMetodo('rapido')">Fast method</button>
+  <button class="btn btn-info" (click)="selectMetodo('profundo')">Deep method</button>
 </div>
 
 <div>
@@ -34,16 +34,16 @@
     <ng-container *ngFor="let fila of reciprocalMatrix; let i = index">
       <tr *ngIf="i == '0'">
         <th></th>
-        <th>Eficiencia</th>
-        <th>Tamaño de la Comunidad</th>
-        <th>Involucramiento</th>
-        <th>Reputacion</th>
-        <th>Madurez</th>
+        <th>Efficiency</th>
+        <th>Size of community</th>
+        <th>Involvement</th>
+        <th>Reputation</th>
+        <th>Maturity</th>
       </tr>
 
 
       <tr *ngIf="i == 0">
-        <th>Eficiencia</th>
+        <th>Efficiency</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id<=i">
             {{opciones.value}}
@@ -64,7 +64,7 @@
       </tr>
 
       <tr *ngIf="i == '1'">
-        <th>Tamaño de la Comunidad</th>
+        <th>Size of community</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value}}
@@ -83,7 +83,7 @@
       </tr>
 
       <tr *ngIf="i == '2'">
-        <th>Involucramiento</th>
+        <th>Involvement</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value }}
@@ -102,7 +102,7 @@
       </tr>
 
       <tr *ngIf="i == '3'">
-        <th>Reputacion</th>
+        <th>Reputation</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value}}
@@ -121,7 +121,7 @@
       </tr>
 
       <tr *ngIf="i == '4'">
-        <th>Madurez</th>
+        <th>Maturity</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value}}
@@ -144,19 +144,21 @@
   </table>
 
   <div class="panel panel-success" *ngIf="consistencia<=10 && mostrarBotonCalculo">
-    <div class="panel-heading">Consistencia</div>
-    <div class="panel-body" >El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
+    <div class="panel-heading">Consistency</div>
+    <div class="panel-body" >
+        The consistency ratio is {{consistencia}}%. Keep it below 10%
+      </div>
   </div>
 
   <div class="panel panel-danger" *ngIf="consistencia>10 && mostrarBotonCalculo">
-    <div class="panel-heading">Consistencia</div>
-    <div class="panel-body">El ratio de consistencia es de {{consistencia}}%. Mantengalo por debajo del 10%</div>
+    <div class="panel-heading">Consistency</div>
+    <div class="panel-body">The consistency ratio is {{consistencia}}%. Keep it below 10%</div>
   </div>
 
 
   <div id="select_ejecucion"  *ngIf="mostrarBotonCalculo">
     
-    <button class="btn btn-info" (click)="calcularResultados()">Calcular resultados</button>
+    <button class="btn btn-info" (click)="calcularResultados()">Calculate results</button>
     </div>
   
 
@@ -164,8 +166,8 @@
     <ng-container *ngFor="let res of resultadoObject; let i = index">
 
       <tr *ngIf="i==0">
-        <th>Resultados</th>
-        <th>Valor</th>
+        <th>Results</th>
+        <th>Value</th>
       </tr>
 
       <tr *ngIf="i==0">
@@ -192,6 +194,52 @@
         <th>4 - {{res.id}}</th>
         <th>{{res.value}}</th>
       </tr>
+
+      <tr *ngIf="i==5">
+        <th>5 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==6">
+        <th>6 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==7">
+        <th>7 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==8">
+        <th>8 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==9">
+        <th>9 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==10">
+        <th>10 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==11">
+        <th>11 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==12">
+        <th>12 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
+      <tr *ngIf="i==13">
+        <th>13 - {{res.id}}</th>
+        <th>{{res.value}}</th>
+      </tr>
+
     </ng-container>
 
 

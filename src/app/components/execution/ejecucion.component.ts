@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { PeticionesService } from "../../services/servicios.service";
+import { Ng2SmartTableModule } from "ng2-smart-table";
+import { PeticionesService } from '../services/servicios.service';
+import { FractionPipe } from "../pipes/fraction.pipe";
 
 
 @Component({
   selector: 'ejecucion',
-  templateUrl: './ejecucion.component.html',
-  styleUrls: ['./ejecucion.component.scss'],
+  templateUrl: '../views/ejecucion.component.html',
   providers: [PeticionesService]
 })
 
@@ -17,6 +18,7 @@ export class EjecucionComponent implements OnInit {
   public characteristics;
   public matrix: Array<any>;
   public normalizeMatrix: Array<any>;
+  public finalNormalizeMatrix: Array<any>;
   public reciprocalMatrix: Array<any>;
   public criterios: Array<string>;
   public selectOptions: Array<number>;
@@ -29,10 +31,11 @@ export class EjecucionComponent implements OnInit {
   public mostrarBotonCalculo;
 
   constructor(private _peticionesService: PeticionesService) {
-    this.titulo = "Criterios de comparación AHP";
+    this.titulo = "AHP comparison criterion";
     this.metodo = "";
     this.matrix = new Array();
     this.normalizeMatrix = new Array();
+    this.finalNormalizeMatrix = new Array();
     this.reciprocalMatrix = new Array();
     this.selectOptions = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0.5, 0.33, 0.25, 0.20, 0.17, 0.14, 0.13, 0.11];
     this.criterios = ["Eficiencia", "Tamaño de la Comunidad", "Involucramiento", "Reputacion", "Madurez"];
@@ -56,72 +59,74 @@ export class EjecucionComponent implements OnInit {
   selectMetodo(metodo) {
     this.metodo = metodo;
     this.cargando = true;
-    if(metodo == 'rapido'){
+    this.mostrarBotonCalculo = false;
+    this.mostrarResultados = false;
+    if (metodo == 'rapido') {
       this.calculateMeasuserLocal();
-    }else{
+    } else {
       this.calculateMeasuresRemote();
     }
   }
 
-  calculateMeasuserLocal(){
+  calculateMeasuserLocal() {
     this.localJson();
-    
+
     setTimeout(() => {
       this.calculateMatrix();
     }, 150);
   }
 
-  calculateMeasuresRemote(){
+  calculateMeasuresRemote() {
     console.log("Entra en calculo remoto");
     this.remoteJsonProcesar();
-    
+
   }
 
-  remoteJsonProcesar(){
+  remoteJsonProcesar() {
     this._peticionesService.procesar().subscribe(
-      result=> {
-        if(result == true){
+      result => {
+        if (result == true) {
           this.remoteJson();
-        }else{
+        } else {
           console.log("Error en procesar");
         }
       },
       error => {
         var errorMsg = error;
-        if(errorMsg !== null){
+        if (errorMsg !== null) {
           console.log(errorMsg);
           alert("Error en el procesamiento");
         }
       }
-      
+
     );
   }
 
-  remoteJson(){
+  remoteJson() {
 
 
 
     this._peticionesService.getReferecencesRemote().subscribe(
-      result=> {
+      result => {
         this.references = result;
       },
       error => {
         var errorMsg = error;
-        if(errorMsg !== null){
+        if (errorMsg !== null) {
           console.log(errorMsg);
           alert("Error en la petición a references");
         }
       }
-      
+
     );
 
     this._peticionesService.getCharacteristicsRemote().subscribe(
-      result=> {
+      result => {
         this.characteristics = result;
       },
       error => {
         var errorMsg = error;
-        if(errorMsg !== null){
+        if (errorMsg !== null) {
           console.log(errorMsg);
           alert("Error en la petición a characteristics");
         }
@@ -324,6 +329,8 @@ export class EjecucionComponent implements OnInit {
 
     this.normalizeMatrix = array;
 
+    this.finalNormalizeMatrix = this.normalizeMatrix;
+
 
     console.log("-----MATRIZ NORMALIZADA");
     console.log(this.normalizeMatrix);
@@ -352,7 +359,8 @@ export class EjecucionComponent implements OnInit {
   initReciprocalMatrix() {
     //this.reciprocalMatrix = this.normalizeMatrix;
     //var keys = Object.keys(this.reciprocalMatrix);
-
+    this.reciprocalMatrix = new Array();
+    this.consistencia = 0;
     for (var i = 0; i < 5; i++) {
       var data = new Array();
       for (var j = 0; j < 5; j++) {
@@ -450,7 +458,7 @@ export class EjecucionComponent implements OnInit {
 
   calculoAHP() {
     var arraySuma = new Array();
-    //this.finalNormalizeArray = this.reciprocalMatrix;
+    this.finalNormalizeArray = new Array();
 
     //var arrayAux = new Array();
     for (var i = 0; i < this.reciprocalMatrix.length; i++) {
@@ -512,26 +520,36 @@ export class EjecucionComponent implements OnInit {
 
   calcularResultados() {
 
-    var indicatorPriorityVector = this.normalizeMatrix.slice(0, this.normalizeMatrix.length);
+    //var indicatorPriorityVector = this.finalNormalizeMatrix.slice(0, this.finalNormalizeMatrix.length);
+
+    var indicatorPriorityVector = new Array();
+    //this.normalizeMatrix;
 
     // ponderamos el vector normalizado con el vector promedio
-    for (var i = 0; i < indicatorPriorityVector.length; i++) {
-      for (var j = 0; j < indicatorPriorityVector[i].length; j++) {
-        indicatorPriorityVector[i][j] = indicatorPriorityVector[i][j] / this.vectorPromedio[i];
+    for (var i = 0; i < this.normalizeMatrix.length; i++) {
+      var indicatorPVAux = new Array();
+      for (var j = 0; j < this.normalizeMatrix[i].length; j++) {
+        var auxValue = this.normalizeMatrix[i][j] * this.vectorPromedio[i];
+        indicatorPVAux.push(auxValue);
+        // indicatorPriorityVector[i][j] = indicatorPriorityVector[i][j] * this.vectorPromedio[i];
       }
+      indicatorPriorityVector.push(indicatorPVAux);
     }
 
     var resultados = new Array();
+    this.resultadoObject = new Array();
 
     //calculamos los resultados
 
-    for (var i = 0; i < indicatorPriorityVector.length; i++) {
+
+    for (var i = 0; i < 14; i++) {
       var resultadoParcial = 0;
-      for (var j = 0; j < indicatorPriorityVector[i].length; j++) {
-        resultadoParcial = resultadoParcial + indicatorPriorityVector[i][j];
+      for (var j = 0; j < indicatorPriorityVector.length; j++) {
+        resultadoParcial = resultadoParcial + indicatorPriorityVector[j][i];
       }
       resultados.push(resultadoParcial);
     }
+
 
     // tratar resultados para la vista
 
@@ -539,43 +557,114 @@ export class EjecucionComponent implements OnInit {
       switch (i) {
         case 0:
           var object = {
-            'id': 'Eficiencia',
+            'id': 'Administration & Finances',
             'value': resultados[0]
           };
           this.resultadoObject.push(object);
           break;
         case 1:
           var object = {
-            'id': 'Tamaño de la comunidad',
+            'id': 'Business',
             'value': resultados[1]
           };
           this.resultadoObject.push(object);
           break;
         case 2:
           var object = {
-            'id': 'Involucramiento',
+            'id': 'Demographics',
             'value': resultados[2]
           };
           this.resultadoObject.push(object);
           break;
         case 3:
           var object = {
-            'id': 'Reputacion',
+            'id': 'Education',
             'value': resultados[3]
           };
           this.resultadoObject.push(object);
           break;
         case 4:
           var object = {
-            'id': 'Madurez',
+            'id': 'Ethics & Democracy',
             'value': resultados[4]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 5:
+          var object = {
+            'id': 'Geospatial',
+            'value': resultados[5]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 6:
+          var object = {
+            'id': 'Health',
+            'value': resultados[6]
+          };
+          this.resultadoObject.push(object);
+          break;
+        case 7:
+          var object = {
+            'id': 'Recreation & Culture',
+            'value': resultados[7]
+          };
+          this.resultadoObject.push(object);
+          break;
+
+        case 8:
+          var object = {
+            'id': 'Safety',
+            'value': resultados[8]
+          };
+          this.resultadoObject.push(object);
+          break;
+
+        case 9:
+          var object = {
+            'id': 'Services',
+            'value': resultados[9]
+          };
+          this.resultadoObject.push(object);
+          break;
+
+        case 10:
+          var object = {
+            'id': 'Sustainability',
+            'value': resultados[10]
+          };
+          this.resultadoObject.push(object);
+          break;
+
+
+
+        case 11:
+          var object = {
+            'id': 'Transport & Infrastructure',
+            'value': resultados[11]
+          };
+          this.resultadoObject.push(object);
+          break;
+
+        case 12:
+          var object = {
+            'id': 'Urban Planning & Housing',
+            'value': resultados[12]
+          };
+          this.resultadoObject.push(object);
+          break;
+
+        case 13:
+          var object = {
+            'id': 'Welfare',
+            'value': resultados[13]
           };
           this.resultadoObject.push(object);
           break;
       }
     }
 
-    this.resultadoObject.sort(function(a,b){
+    this.resultadoObject.sort(function (a, b) {
       return (b.value - a.value);
     });
 
