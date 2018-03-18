@@ -8,7 +8,7 @@ export class InformacionComponent{
   public titulo:string;
 
   constructor(){
-    this.titulo = "¿Qué es POP Framework?";
+    this.titulo = "What is POP Framework?";
   }
 
   ngOnInit(){
