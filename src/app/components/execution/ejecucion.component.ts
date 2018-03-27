@@ -64,13 +64,19 @@ export class EjecucionComponent implements OnInit {
     this.cargando = true;
     this.mostrarBotonCalculo = false;
     this.mostrarResultados = false;
+    /**
+     * - sobra comparacion, se compara al procesar los observables
+     * - sobre calculateMeasuresLocal
+     */
     if (metodo == 'rapido') {
       this.calculateMeasuserLocal();
     } else {
       this.calculateMeasuresRemote();
     }
   }
-
+/**
+ * - sobra, se procesa todo de backend
+*/
   calculateMeasuserLocal() {
     this.localJson();
 
@@ -79,12 +85,19 @@ export class EjecucionComponent implements OnInit {
     }, 150);
   }
 
+    /**
+ * - se puede procesar aqui directamente
+*/
   calculateMeasuresRemote() {
     console.log("Entra en calculo remoto");
     this.remoteJsonProcesar();
 
   }
 
+/**
+ * -se puede procesar en calculateMeasuresRemote
+ * - se debe comparar con el modo de ejecucion para procesar o no
+*/
   remoteJsonProcesar() {
     this._peticionesService.procesar().subscribe(
       result => {
@@ -104,7 +117,9 @@ export class EjecucionComponent implements OnInit {
 
     );
   }
-
+/**
+ * puede sobrar por ubicarse en otro lugar
+*/
   remoteJson() {
 
 
@@ -141,7 +156,9 @@ export class EjecucionComponent implements OnInit {
     }, 10000);
 
   }
-
+/**
+ * sobra
+*/
   localJson() {
     this.service.getReferencesLocal().subscribe(
       (response) => {
@@ -157,7 +174,10 @@ export class EjecucionComponent implements OnInit {
     );
 
   }
-
+/**
+ * logica de negocio, a servicio
+ * inicializacion de objetos como constantes
+*/
   calculateMatrix() {
 
     console.log("aqui");
@@ -219,7 +239,9 @@ export class EjecucionComponent implements OnInit {
 
   }
 
-
+/**
+ * logica de negocio, a servicio
+*/
   normalizeMatrixFunction() {
     this.normalizeMatrix = this.matrix;
 
@@ -252,6 +274,9 @@ export class EjecucionComponent implements OnInit {
     this.initReciprocalMatrix();
   }
 
+  /**
+ * permanece aqui
+ */
   buscarMayor(array) {
     var mayor = 0;
 
@@ -266,7 +291,9 @@ export class EjecucionComponent implements OnInit {
     return mayor;
 
   }
-
+/**
+ * logica de negocio, a servicio
+*/
   initReciprocalMatrix() {
     this.reciprocalMatrix = new Array();
     this.consistencia = 0;
@@ -287,6 +314,9 @@ export class EjecucionComponent implements OnInit {
     this.mostrarBotonCalculo = true;
   }
 
+  /**
+ * permanece aqui
+ */
   changeValue(index1, index2, $event) {
 
     this.reciprocalMatrix[index2][index1].value = this.evaluarValor(parseFloat($event));
@@ -296,6 +326,10 @@ export class EjecucionComponent implements OnInit {
     this.calculoAHP();
 
   }
+
+  /**
+ * permanece aqui
+ */
 
   evaluarValor(valor) {
     switch (valor) {
@@ -336,6 +370,9 @@ export class EjecucionComponent implements OnInit {
     }
   }
 
+  /**
+ * logica de negocio, a servicio
+*/
   calculoAHP() {
     var arraySuma = new Array();
     this.finalNormalizeArray = new Array();
@@ -398,6 +435,9 @@ export class EjecucionComponent implements OnInit {
     this.consistencia = ((this.consistencia / 1.12) * 100).toFixed(0);
   }
 
+  /**
+ * logica de negocio, a servicio
+*/
   calcularResultados() {
 
     //var indicatorPriorityVector = this.finalNormalizeMatrix.slice(0, this.finalNormalizeMatrix.length);
