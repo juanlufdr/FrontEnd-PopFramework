@@ -1,16 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { Ng2SmartTableModule } from "ng2-smart-table";
-import { PeticionesService } from '../services/servicios.service';
-import { FractionPipe } from "../pipes/fraction.pipe";
+import { PeticionesService } from './../../services/servicios.service';
+import { EjecucionService } from './ejecucion.service';
+import { DEFAULT_VALUES_PARAMETERS } from './ejecucion.const';
+import { Component, OnInit } from '@angular/core';
+import { EjecucionProxyService } from './ejecucion-proxy.service';
 
 
 @Component({
   selector: 'ejecucion',
-  templateUrl: '../views/ejecucion.component.html',
-  providers: [PeticionesService]
+  templateUrl: './ejecucion.component.html',
+  styleUrls: ['./ejecucion.component.scss'],
+  providers: [PeticionesService, EjecucionService, EjecucionProxyService]
 })
 
-
+// tslint:disable-next-line:max-line-length
 export class EjecucionComponent implements OnInit {
   public titulo: string;
   public metodo: string;
@@ -30,7 +32,7 @@ export class EjecucionComponent implements OnInit {
   public cargando;
   public mostrarBotonCalculo;
 
-  constructor(private _peticionesService: PeticionesService) {
+  constructor(private _peticionesService: PeticionesService, private service: EjecucionProxyService) {
     this.titulo = "AHP comparison criterion";
     this.metodo = "";
     this.matrix = new Array();
@@ -52,6 +54,7 @@ export class EjecucionComponent implements OnInit {
 
   ngOnInit() {
     console.log("Cargado ejecucion.component.ts");
+    // conexion con la base de datos
 
 
   }
@@ -140,15 +143,9 @@ export class EjecucionComponent implements OnInit {
   }
 
   localJson() {
-    this._peticionesService.getReferecences().subscribe(
-      callbackOk => {
-        this.references = callbackOk;
-        ""
-        //console.log(this.references);
-      },
-      callbackKo => {
-        var errorMsg = <any>callbackKo;
-        console.log(errorMsg);
+    this.service.getReferencesLocal().subscribe(
+      (response) => {
+        this.references = response;
       }
     );
 
@@ -156,10 +153,6 @@ export class EjecucionComponent implements OnInit {
       callbackOk => {
         this.characteristics = callbackOk;
         console.log(this.characteristics);
-      },
-      callbackKo => {
-        var errorMsg = <any>callbackKo;
-        console.log(errorMsg);
       }
     );
 
@@ -169,28 +162,13 @@ export class EjecucionComponent implements OnInit {
 
     console.log("aqui");
 
-    var keys = Object.keys(this.characteristics.contributors);
+    let keys = Object.keys(this.characteristics.contributors);
 
-    var efficiency, size_comunity, involvement, reputation, maturity;
+    let efficiency, size_comunity, involvement, reputation, maturity;
 
-    efficiency = {
-      "administration_finances": 0,
-      "business": 0,
-      "demographics": 0,
-      "education": 0,
-      "ethics_democracy": 0,
-      "geospatial": 0,
-      "health": 0,
-      "recreation_culture": 0,
-      "safety": 0,
-      "services": 0,
-      "sustainability": 0,
-      "transport_infrastructure": 0,
-      "urban_planning_housing": 0,
-      "welfare": 0
-    };
+    efficiency = DEFAULT_VALUES_PARAMETERS;
 
-    involvement = reputation = maturity = efficiency;
+    //involvement = reputation = maturity = efficiency;
 
     for (var i = 0; i < keys.length; i++) {
       efficiency[keys[i]] = this.references.datasets_references_github[keys[i]] / this.references.datasets_references_ornot_github[keys[i]];
@@ -198,69 +176,26 @@ export class EjecucionComponent implements OnInit {
 
     this.matrix.push(efficiency);
 
-    size_comunity = {
-      "administration_finances": 0,
-      "business": 0,
-      "demographics": 0,
-      "education": 0,
-      "ethics_democracy": 0,
-      "geospatial": 0,
-      "health": 0,
-      "recreation_culture": 0,
-      "safety": 0,
-      "services": 0,
-      "sustainability": 0,
-      "transport_infrastructure": 0,
-      "urban_planning_housing": 0,
-      "welfare": 0
-    };
+    size_comunity = DEFAULT_VALUES_PARAMETERS;
 
     for (var i = 0; i < keys.length; i++) {
-      size_comunity[keys[i]] = this.characteristics.contributors[keys[i]] / this.references.distinct_repositories_referencing_category[keys[i]];
+      size_comunity[keys[i]] = this.characteristics.contributors[keys[i]] /
+        this.references.distinct_repositories_referencing_category[keys[i]];
     }
 
     this.matrix.push(size_comunity);
 
-    involvement = {
-      "administration_finances": 0,
-      "business": 0,
-      "demographics": 0,
-      "education": 0,
-      "ethics_democracy": 0,
-      "geospatial": 0,
-      "health": 0,
-      "recreation_culture": 0,
-      "safety": 0,
-      "services": 0,
-      "sustainability": 0,
-      "transport_infrastructure": 0,
-      "urban_planning_housing": 0,
-      "welfare": 0
-    };
+    involvement = DEFAULT_VALUES_PARAMETERS;
 
 
     for (var i = 0; i < keys.length; i++) {
+      // tslint:disable-next-line:max-line-length
       involvement[keys[i]] = this.characteristics.contributions[keys[i]] / this.references.distinct_repositories_referencing_category[keys[i]];
     }
 
     this.matrix.push(involvement);
 
-    reputation = {
-      "administration_finances": 0,
-      "business": 0,
-      "demographics": 0,
-      "education": 0,
-      "ethics_democracy": 0,
-      "geospatial": 0,
-      "health": 0,
-      "recreation_culture": 0,
-      "safety": 0,
-      "services": 0,
-      "sustainability": 0,
-      "transport_infrastructure": 0,
-      "urban_planning_housing": 0,
-      "welfare": 0
-    };
+    reputation = DEFAULT_VALUES_PARAMETERS;
 
     for (var i = 0; i < keys.length; i++) {
       reputation[keys[i]] = this.characteristics.subscribers[keys[i]] / this.references.distinct_repositories_referencing_category[keys[i]];
@@ -268,22 +203,7 @@ export class EjecucionComponent implements OnInit {
 
     this.matrix.push(reputation);
 
-    maturity = {
-      "administration_finances": 0,
-      "business": 0,
-      "demographics": 0,
-      "education": 0,
-      "ethics_democracy": 0,
-      "geospatial": 0,
-      "health": 0,
-      "recreation_culture": 0,
-      "safety": 0,
-      "services": 0,
-      "sustainability": 0,
-      "transport_infrastructure": 0,
-      "urban_planning_housing": 0,
-      "welfare": 0
-    };
+    maturity = DEFAULT_VALUES_PARAMETERS;
 
 
     for (var i = 0; i < keys.length; i++) {
@@ -324,21 +244,12 @@ export class EjecucionComponent implements OnInit {
 
       array.push(data);
     }
-    console.log("array");
-    console.log(array);
 
     this.normalizeMatrix = array;
 
     this.finalNormalizeMatrix = this.normalizeMatrix;
 
-
-    console.log("-----MATRIZ NORMALIZADA");
-    console.log(this.normalizeMatrix);
-
     this.initReciprocalMatrix();
-
-
-
   }
 
   buscarMayor(array) {
@@ -357,11 +268,9 @@ export class EjecucionComponent implements OnInit {
   }
 
   initReciprocalMatrix() {
-    //this.reciprocalMatrix = this.normalizeMatrix;
-    //var keys = Object.keys(this.reciprocalMatrix);
     this.reciprocalMatrix = new Array();
     this.consistencia = 0;
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       var data = new Array();
       for (var j = 0; j < 5; j++) {
         var object = {
@@ -376,44 +285,15 @@ export class EjecucionComponent implements OnInit {
 
     this.cargando = false;
     this.mostrarBotonCalculo = true;
-    console.log("Reciprocal Matrix");
-    console.log(this.reciprocalMatrix);
   }
 
   changeValue(index1, index2, $event) {
 
-
-    // var selectValue = $event.split("/");
-    // var number;
-
-    // if (selectValue.length > 1) {
-    //   let number1 = parseInt(selectValue[0]);
-    //   let number2 = parseInt(selectValue[1]);
-    //   number = number2;
-    // } else {
-    //   number = 1 / parseInt(selectValue[0]);
-    // }
-
-    // this.reciprocalMatrix[index2][index1].value = number;
     this.reciprocalMatrix[index2][index1].value = this.evaluarValor(parseFloat($event));
 
     this.reciprocalMatrix[index1][index2].value = parseFloat(this.reciprocalMatrix[index1][index2].value);
 
-    //var auxNumber = this.reciprocalMatrix[index1][index2].value.split("/");
-
-    // if (auxNumber.length > 1) {
-    //   this.reciprocalMatrix[index1][index2].value = parseFloat(auxNumber[0]) / parseFloat(auxNumber[1]);
-    // } else {
-    //   this.reciprocalMatrix[index1][index2].value = parseFloat(this.reciprocalMatrix[index1][index2].value);
-    // }
-
-
-
     this.calculoAHP();
-
-
-    // console.log("MAAATRIZ");
-    // console.log(this.reciprocalMatrix);
 
   }
 
