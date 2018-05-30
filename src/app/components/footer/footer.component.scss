@@ -1,0 +1,16 @@
+.footer {
+  background: #2196F3;
+  flex: 0 0 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  img {
+    transform: scale(0.5, 0.5);
+    padding-right: 40px;
+  }
+  p {
+    color: white;
+    font-weight: bold;
+  }
+}

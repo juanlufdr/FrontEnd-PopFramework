@@ -1,0 +1,43 @@
+.header {
+  padding: 0px;
+  background: #045EDC;
+  flex: 0 0 100px;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  p {
+    padding: 30px 80px 10px 15px;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  nav {
+    background: #2196F3;
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      li {
+        padding: 30px 10px 10px 10px;
+        a {
+          color: white;
+          font-size: 20px;
+          transition: 300ms;
+          text-decoration: none;
+          &:hover {
+            color: white;
+            text-decoration: none;
+            background: #2196F3;
+          }
+          &:link &:visited &:active {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.activado {
+  border-bottom: 3px solid white;
+}

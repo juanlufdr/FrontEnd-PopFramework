@@ -4,12 +4,14 @@
 
   <p>You can then choose one of the two available execution modes:</p>
   <ol>
-    <li><strong>Fast: </strong>Perform the calculation from the categorization of preloaded datasets. (This method is less
-      exhaustive but its execution time is faster)
+    <li>
+      <strong>Fast: </strong>Perform the calculation from the categorization of preloaded datasets. (This method is less exhaustive
+      but its execution time is faster)
     </li>
-    <li><strong>Deep: </strong>First, it performs the calculations for the categorization of datasets and later,
-            After selecting the indicators, perform the calculations to show the optimal options. (This method, despite
-            be more exhaustive, it has a much higher execution time
+    <li>
+      <strong>Deep: </strong>First, it performs the calculations for the categorization of datasets and later, After selecting the
+      indicators, perform the calculations to show the optimal options. (This method, despite be more exhaustive, it has
+      a much higher execution time
     </li>
   </ol>
 
@@ -25,25 +27,28 @@
 
 <div>
 
-  <h3  *ngIf="metodo == 'rapido'">Ejecución Rapida</h3>
-  <h3  *ngIf="metodo == 'profundo'">Ejecución Profunda</h3>
+  <h3 *ngIf="metodo == 'rapido'">Fast method</h3>
+  <h3 *ngIf="metodo == 'profundo'">Deep method</h3>
 
-  <h4 class="text-center" *ngIf="cargando">Cargando indicadores, espere por favor</h4>
+  <div class="loadingAction" *ngIf="cargando">
+    <p-progressSpinner class="text-center"></p-progressSpinner>
+    <h4 class="text-center">Loading, please wait...</h4>
+  </div>
 
   <table *ngIf="!cargando" class="table table-bordered text-center">
     <ng-container *ngFor="let fila of reciprocalMatrix; let i = index">
       <tr *ngIf="i == '0'">
         <th></th>
-        <th>Efficiency</th>
-        <th>Size of community</th>
-        <th>Involvement</th>
-        <th>Reputation</th>
-        <th>Maturity</th>
+        <th class="background_blue">Efficiency</th>
+        <th class="background_blue">Size of community</th>
+        <th class="background_blue">Involvement</th>
+        <th class="background_blue">Reputation</th>
+        <th class="background_blue">Maturity</th>
       </tr>
 
 
       <tr *ngIf="i == 0">
-        <th>Efficiency</th>
+        <th class="background_blue">Efficiency</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id<=i">
             {{opciones.value}}
@@ -64,7 +69,7 @@
       </tr>
 
       <tr *ngIf="i == '1'">
-        <th>Size of community</th>
+        <th class="background_blue">Size of community</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value}}
@@ -83,7 +88,7 @@
       </tr>
 
       <tr *ngIf="i == '2'">
-        <th>Involvement</th>
+        <th class="background_blue">Involvement</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value }}
@@ -91,10 +96,10 @@
           <ng-container *ngIf="j>i">
             <th>
               <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
-                  <option *ngFor="let values of selectOptions, let k = index">
-                    {{values}}
-                  </option>
-                </select>
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
             </th>
           </ng-container>
         </ng-container>
@@ -102,7 +107,7 @@
       </tr>
 
       <tr *ngIf="i == '3'">
-        <th>Reputation</th>
+        <th class="background_blue">Reputation</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value}}
@@ -110,10 +115,10 @@
           <ng-container *ngIf="j>i">
             <th>
               <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
-                    <option *ngFor="let values of selectOptions, let k = index">
-                      {{values}}
-                    </option>
-                  </select>
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
             </th>
           </ng-container>
         </ng-container>
@@ -121,7 +126,7 @@
       </tr>
 
       <tr *ngIf="i == '4'">
-        <th>Maturity</th>
+        <th class="background_blue">Maturity</th>
         <ng-container *ngFor="let opciones of fila; let j = index">
           <th *ngIf="opciones.id <= i">
             {{opciones.value}}
@@ -129,10 +134,10 @@
           <ng-container *ngIf="j>i">
             <th>
               <select [(ngModel)]="reciprocalMatrix[i][j].value" (ngModelChange)="changeValue(i, j, $event)">
-                      <option *ngFor="let values of selectOptions, let k = index">
-                        {{values}}
-                      </option>
-                    </select>
+                <option *ngFor="let values of selectOptions, let k = index">
+                  {{values}}
+                </option>
+              </select>
             </th>
           </ng-container>
         </ng-container>
@@ -145,9 +150,9 @@
 
   <div class="panel panel-success" *ngIf="consistencia<=10 && mostrarBotonCalculo">
     <div class="panel-heading">Consistency</div>
-    <div class="panel-body" >
-        The consistency ratio is {{consistencia}}%. Keep it below 10%
-      </div>
+    <div class="panel-body">
+      The consistency ratio is {{consistencia}}%. Keep it below 10%
+    </div>
   </div>
 
   <div class="panel panel-danger" *ngIf="consistencia>10 && mostrarBotonCalculo">
@@ -156,18 +161,18 @@
   </div>
 
 
-  <div id="select_ejecucion"  *ngIf="mostrarBotonCalculo">
-    
+  <div id="select_ejecucion" *ngIf="mostrarBotonCalculo">
+
     <button class="btn btn-info" (click)="calcularResultados()">Calculate results</button>
-    </div>
-  
+  </div>
+
 
   <table *ngIf="mostrarResultados" class="table table-bordered text-center">
     <ng-container *ngFor="let res of resultadoObject; let i = index">
 
       <tr *ngIf="i==0">
-        <th>Results</th>
-        <th>Value</th>
+        <th class="background_blue">Results</th>
+        <th class="background_blue">Value</th>
       </tr>
 
       <tr *ngIf="i==0">

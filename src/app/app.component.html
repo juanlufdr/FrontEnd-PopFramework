@@ -1,32 +1,12 @@
 <div class="container-fluid col-lg-12">
 
-  <header class="col-lg-12 header">
-    <p>{{titulo}}</p>
-    <nav id="nav" class="col-lg-12 nav">
-        <ul>
-          <li><a [routerLink]="['/home']" [routerLinkActive]="['activado']">Inicio</a></li>
-          <li><a [routerLink]="['/info']" [routerLinkActive]="['activado']">Información</a></li>
-          <li><a [routerLink]="['/ejecucion']" [routerLinkActive]="['activado']">Ejecución</a></li>
-        </ul>
-    
-      </nav>
-  </header>
-
-
+  <app-header></app-header>
 
   <section class="col-lg-10 col-lg-offset-1 section">
-
-      <div><router-outlet></router-outlet></div>
-
-      
-
-
+    <div>
+      <router-outlet></router-outlet>
+    </div>
   </section>
 
-
-  <footer class="col-lg-12 footer">
-    <img src="../assets/images/UEx_Footer.png" alt="">
-   <p>   Juan Luis Fragoso del Rey - Grado en Ingeniería Informática en Ingenieria del Software - Trabajo Fin de Grado - Universidad de Extremadura</p>
-
-  </footer>
+  <app-footer></app-footer>
 </div>

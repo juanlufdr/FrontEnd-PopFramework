@@ -1,18 +1,18 @@
 import { PeticionesService } from './../../services/servicios.service';
-import { EjecucionService } from './ejecucion.service';
 import { DEFAULT_VALUES_PARAMETERS } from './ejecucion.const';
 import { Component, OnInit } from '@angular/core';
-import { EjecucionProxyService } from './ejecucion-proxy.service';
+import { EjecucionService } from '../../services/ejecucion/ejecucion.service';
+import { Observable } from 'rxjs/Observable';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 
 @Component({
-  selector: 'ejecucion',
+  selector: 'app-ejecucion',
   templateUrl: './ejecucion.component.html',
   styleUrls: ['./ejecucion.component.scss'],
-  providers: [PeticionesService, EjecucionService, EjecucionProxyService]
+  providers: [PeticionesService, EjecucionService]
 })
 
-// tslint:disable-next-line:max-line-length
 export class EjecucionComponent implements OnInit {
   public titulo: string;
   public metodo: string;
@@ -32,29 +32,44 @@ export class EjecucionComponent implements OnInit {
   public cargando;
   public mostrarBotonCalculo;
 
-  constructor(private _peticionesService: PeticionesService, private service: EjecucionProxyService) {
-    this.titulo = "AHP comparison criterion";
-    this.metodo = "";
+  constructor(
+    private _peticionesService: PeticionesService,
+    private ejecucionService: EjecucionService
+  ) {
+    this.titulo = 'AHP comparison criterion';
+    this.metodo = '';
     this.matrix = new Array();
     this.normalizeMatrix = new Array();
     this.finalNormalizeMatrix = new Array();
     this.reciprocalMatrix = new Array();
     this.selectOptions = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0.5, 0.33, 0.25, 0.20, 0.17, 0.14, 0.13, 0.11];
-    this.criterios = ["Eficiencia", "Tamaño de la Comunidad", "Involucramiento", "Reputacion", "Madurez"];
+    this.criterios = ['Eficiencia', 'Tamaño de la Comunidad', 'Involucramiento', 'Reputacion', 'Madurez'];
     this.finalNormalizeArray = new Array();
     this.vectorPromedio = new Array();
     this.consistencia = 0;
     this.resultadoObject = new Array();
     this.mostrarResultados = false;
-    this.cargando == false;
+    this.cargando = false;
     this.mostrarBotonCalculo = false;
 
   }
 
 
   ngOnInit() {
-    console.log("Cargado ejecucion.component.ts");
-    // conexion con la base de datos
+    console.log('Cargado ejecucion.component.ts');
+    this._peticionesService.connect().subscribe(
+
+      result => {
+        if (result == true) {
+          console.log('Conectado a base de datos');
+        }else {
+          console.log('Error al conectar a base de datos');
+        }
+      },
+      error => {
+        console.log("error en la petición");
+      }
+    );
 
 
   }
@@ -64,272 +79,72 @@ export class EjecucionComponent implements OnInit {
     this.cargando = true;
     this.mostrarBotonCalculo = false;
     this.mostrarResultados = false;
-    /**
-     * - sobra comparacion, se compara al procesar los observables
-     * - sobre calculateMeasuresLocal
-     */
-    if (metodo == 'rapido') {
-      this.calculateMeasuserLocal();
-    } else {
-      this.calculateMeasuresRemote();
-    }
-  }
-/**
- * - sobra, se procesa todo de backend
-*/
-  calculateMeasuserLocal() {
-    this.localJson();
-
-    setTimeout(() => {
-      this.calculateMatrix();
-    }, 150);
+    this.calculateMeasures();
   }
 
-    /**
- * - se puede procesar aqui directamente
-*/
-  calculateMeasuresRemote() {
-    console.log("Entra en calculo remoto");
+  calculateMeasures() {
+    console.log('Entra en calculo remoto');
     this.remoteJsonProcesar();
 
   }
 
-/**
- * -se puede procesar en calculateMeasuresRemote
- * - se debe comparar con el modo de ejecucion para procesar o no
-*/
   remoteJsonProcesar() {
-    this._peticionesService.procesar().subscribe(
-      result => {
-        if (result == true) {
-          this.remoteJson();
-        } else {
-          console.log("Error en procesar");
+
+    if (this.metodo === 'rapido') {
+      this.callRemoteService();
+    } else {
+      this._peticionesService.procesar().subscribe(
+        result => {
+          if (result === true) {
+            this.callRemoteService();
+          } else {
+            console.log('Error en procesar');
+          }
+        },
+        error => {
+          let errorMsg = error;
+          if (errorMsg !== null) {
+            console.log(errorMsg);
+            alert('Error en el procesamiento');
+          }
         }
-      },
-      error => {
-        var errorMsg = error;
-        if (errorMsg !== null) {
-          console.log(errorMsg);
-          alert("Error en el procesamiento");
-        }
-      }
 
-    );
-  }
-/**
- * puede sobrar por ubicarse en otro lugar
-*/
-  remoteJson() {
-
-
-
-    this._peticionesService.getReferecencesRemote().subscribe(
-      result => {
-        this.references = result;
-      },
-      error => {
-        var errorMsg = error;
-        if (errorMsg !== null) {
-          console.log(errorMsg);
-          alert("Error en la petición a references");
-        }
-      }
-
-    );
-
-    this._peticionesService.getCharacteristicsRemote().subscribe(
-      result => {
-        this.characteristics = result;
-      },
-      error => {
-        var errorMsg = error;
-        if (errorMsg !== null) {
-          console.log(errorMsg);
-          alert("Error en la petición a characteristics");
-        }
-      }
-    );
-
-    setTimeout(() => {
-      this.calculateMatrix();
-    }, 10000);
+      );
+    }
 
   }
-/**
- * sobra
-*/
-  localJson() {
-    this.service.getReferencesLocal().subscribe(
+
+  callRemoteService() {
+
+    this._peticionesService.getReferenceAndCharacteristics().subscribe(
       (response) => {
-        this.references = response;
+        this.references = response[0];
+        this.characteristics = response[1];
+        console.log(response);
+        this.matrix = this.ejecucionService.calculateMatrix(this.characteristics, this.references);
+        this.normalizeMatrix = this.ejecucionService.normalizeMatrixFunction(this.matrix);
+        this.reciprocalMatrix = this.ejecucionService.initReciprocalMatrix();
+        this.consistencia = 0;
+        console.log(this.cargando);
+        this.cargando = false;
+        console.log(this.cargando);
+        let object = this.ejecucionService.calculoAHP(this.reciprocalMatrix, this.vectorPromedio, this.consistencia);
+        this.vectorPromedio = object.vector_promedio;
+        this.consistencia = object.consistencia;
+        this.mostrarBotonCalculo = true;
       }
     );
 
-    this._peticionesService.getCharacteristics().subscribe(
-      callbackOk => {
-        this.characteristics = callbackOk;
-        console.log(this.characteristics);
-      }
-    );
-
-  }
-/**
- * logica de negocio, a servicio
- * inicializacion de objetos como constantes
-*/
-  calculateMatrix() {
-
-    console.log("aqui");
-
-    let keys = Object.keys(this.characteristics.contributors);
-
-    let efficiency, size_comunity, involvement, reputation, maturity;
-
-    efficiency = DEFAULT_VALUES_PARAMETERS;
-
-    //involvement = reputation = maturity = efficiency;
-
-    for (var i = 0; i < keys.length; i++) {
-      efficiency[keys[i]] = this.references.datasets_references_github[keys[i]] / this.references.datasets_references_ornot_github[keys[i]];
-    }
-
-    this.matrix.push(efficiency);
-
-    size_comunity = DEFAULT_VALUES_PARAMETERS;
-
-    for (var i = 0; i < keys.length; i++) {
-      size_comunity[keys[i]] = this.characteristics.contributors[keys[i]] /
-        this.references.distinct_repositories_referencing_category[keys[i]];
-    }
-
-    this.matrix.push(size_comunity);
-
-    involvement = DEFAULT_VALUES_PARAMETERS;
-
-
-    for (var i = 0; i < keys.length; i++) {
-      // tslint:disable-next-line:max-line-length
-      involvement[keys[i]] = this.characteristics.contributions[keys[i]] / this.references.distinct_repositories_referencing_category[keys[i]];
-    }
-
-    this.matrix.push(involvement);
-
-    reputation = DEFAULT_VALUES_PARAMETERS;
-
-    for (var i = 0; i < keys.length; i++) {
-      reputation[keys[i]] = this.characteristics.subscribers[keys[i]] / this.references.distinct_repositories_referencing_category[keys[i]];
-    }
-
-    this.matrix.push(reputation);
-
-    maturity = DEFAULT_VALUES_PARAMETERS;
-
-
-    for (var i = 0; i < keys.length; i++) {
-      maturity[keys[i]] = this.characteristics.maturity[keys[i]] / this.references.distinct_repositories_referencing_category[keys[i]];
-    }
-
-    this.matrix.push(maturity);
-
-
-    console.log(this.matrix);
-
-    this.normalizeMatrixFunction();
-
   }
 
-/**
- * logica de negocio, a servicio
-*/
-  normalizeMatrixFunction() {
-    this.normalizeMatrix = this.matrix;
-
-    var keys = Object.keys(this.matrix[0]);
-
-    for (var i = 0; i < this.matrix.length; i++) {
-      var bestValue = this.buscarMayor(this.matrix[i]);
-      for (var j = 0; j < keys.length; j++) {
-        this.normalizeMatrix[i][keys[j]] = this.matrix[i][keys[j]] / bestValue;
-      }
-
-    }
-
-    var array = new Array();
-
-    for (var i = 0; i < this.normalizeMatrix.length; i++) {
-      var data = new Array();
-      for (var j = 0; j < keys.length; j++) {
-
-        data.push(this.normalizeMatrix[i][keys[j]]);
-      }
-
-      array.push(data);
-    }
-
-    this.normalizeMatrix = array;
-
-    this.finalNormalizeMatrix = this.normalizeMatrix;
-
-    this.initReciprocalMatrix();
-  }
-
-  /**
- * permanece aqui
- */
-  buscarMayor(array) {
-    var mayor = 0;
-
-    var keys = Object.keys(array);
-
-    for (var i = 0; i < keys.length; i++) {
-      if (array[keys[i]] > mayor) {
-        mayor = array[keys[i]];
-      }
-    }
-
-    return mayor;
-
-  }
-/**
- * logica de negocio, a servicio
-*/
-  initReciprocalMatrix() {
-    this.reciprocalMatrix = new Array();
-    this.consistencia = 0;
-    for (let i = 0; i < 5; i++) {
-      var data = new Array();
-      for (var j = 0; j < 5; j++) {
-        var object = {
-          "id": j,
-          "value": 1
-        }
-        data.push(object);
-      }
-
-      this.reciprocalMatrix.push(data);
-    }
-
-    this.cargando = false;
-    this.mostrarBotonCalculo = true;
-  }
-
-  /**
- * permanece aqui
- */
   changeValue(index1, index2, $event) {
-
     this.reciprocalMatrix[index2][index1].value = this.evaluarValor(parseFloat($event));
-
     this.reciprocalMatrix[index1][index2].value = parseFloat(this.reciprocalMatrix[index1][index2].value);
-
-    this.calculoAHP();
-
+    let object = this.ejecucionService.calculoAHP(this.reciprocalMatrix, this.vectorPromedio, this.consistencia);
+    this.vectorPromedio = object.vector_promedio;
+    this.consistencia = object.consistencia;
   }
 
-  /**
- * permanece aqui
- */
 
   evaluarValor(valor) {
     switch (valor) {
@@ -370,162 +185,83 @@ export class EjecucionComponent implements OnInit {
     }
   }
 
-  /**
- * logica de negocio, a servicio
-*/
-  calculoAHP() {
-    var arraySuma = new Array();
-    this.finalNormalizeArray = new Array();
-
-    //var arrayAux = new Array();
-    for (var i = 0; i < this.reciprocalMatrix.length; i++) {
-      var auxArray = new Array();
-
-      for (var j = 0; j < this.reciprocalMatrix[i].length; j++) {
-        auxArray.push(this.reciprocalMatrix[i][j].value);
-      }
-      this.finalNormalizeArray.push(auxArray);
-    }
-
-
-    this.vectorPromedio = new Array();
-    // creamos la matriz suma
-    for (var i = 0; i < this.reciprocalMatrix.length; i++) {
-      var suma = 0;
-      for (var j = 0; j < this.reciprocalMatrix[i].length; j++) {
-        suma = suma + this.reciprocalMatrix[j][i].value;
-      }
-      arraySuma.push(suma);
-    }
-
-    // OK HASTA AQUI
-    // creamos la matriz normalizada
-    for (var i = 0; i < this.reciprocalMatrix.length; i++) {
-      for (var j = 0; j < this.reciprocalMatrix[i].length; j++) {
-        var normalizeValue = this.reciprocalMatrix[j][i].value / arraySuma[i];
-        this.finalNormalizeArray[j][i] = normalizeValue;
-      }
-    }
-
-    // calculamos el vector promedio
-    for (var i = 0; i < this.finalNormalizeArray.length; i++) {
-      var promedio = 0;
-      var contador = 0;
-      for (var j = 0; j < this.finalNormalizeArray[i].length; j++) {
-        promedio = promedio + this.finalNormalizeArray[i][j];
-        contador++;
-      }
-      promedio = promedio / contador;
-      this.vectorPromedio.push(promedio);
-    }
-
-
-    var calculoConsistencia = 0;
-
-    for (var i = 0; i < 5; i++) {
-      calculoConsistencia = calculoConsistencia + (arraySuma[i] * this.vectorPromedio[i]);
-    }
-
-    //console.log("I24 -->" + calculoConsistencia);
-
-    this.consistencia = (calculoConsistencia - 5) / (5 - 1);
-
-    //console.log("CR -->" + this.consistencia);
-
-    this.consistencia = ((this.consistencia / 1.12) * 100).toFixed(0);
-  }
-
-  /**
- * logica de negocio, a servicio
-*/
   calcularResultados() {
 
-    //var indicatorPriorityVector = this.finalNormalizeMatrix.slice(0, this.finalNormalizeMatrix.length);
-
-    var indicatorPriorityVector = new Array();
-    //this.normalizeMatrix;
-
-    // ponderamos el vector normalizado con el vector promedio
-    for (var i = 0; i < this.normalizeMatrix.length; i++) {
-      var indicatorPVAux = new Array();
-      for (var j = 0; j < this.normalizeMatrix[i].length; j++) {
-        var auxValue = this.normalizeMatrix[i][j] * this.vectorPromedio[i];
+    let indicatorPriorityVector = new Array();
+    for (let i = 0; i < this.normalizeMatrix.length; i++) {
+      let indicatorPVAux = new Array();
+      for (let j = 0; j < this.normalizeMatrix[i].length; j++) {
+        let auxValue = this.normalizeMatrix[i][j] * this.vectorPromedio[i];
         indicatorPVAux.push(auxValue);
-        // indicatorPriorityVector[i][j] = indicatorPriorityVector[i][j] * this.vectorPromedio[i];
       }
       indicatorPriorityVector.push(indicatorPVAux);
     }
 
-    var resultados = new Array();
+    let resultados = new Array();
     this.resultadoObject = new Array();
 
-    //calculamos los resultados
-
-
-    for (var i = 0; i < 14; i++) {
-      var resultadoParcial = 0;
-      for (var j = 0; j < indicatorPriorityVector.length; j++) {
+    for (let i = 0; i < 14; i++) {
+      let resultadoParcial = 0;
+      for (let j = 0; j < indicatorPriorityVector.length; j++) {
         resultadoParcial = resultadoParcial + indicatorPriorityVector[j][i];
       }
       resultados.push(resultadoParcial);
     }
 
-
-    // tratar resultados para la vista
-
-    for (var i = 0; i < resultados.length; i++) {
+    for (let i = 0; i < resultados.length; i++) {
+      let object = null;
       switch (i) {
         case 0:
-          var object = {
+          object = {
             'id': 'Administration & Finances',
             'value': resultados[0]
           };
           this.resultadoObject.push(object);
           break;
         case 1:
-          var object = {
+          object = {
             'id': 'Business',
             'value': resultados[1]
           };
           this.resultadoObject.push(object);
           break;
         case 2:
-          var object = {
+          object = {
             'id': 'Demographics',
             'value': resultados[2]
           };
           this.resultadoObject.push(object);
           break;
         case 3:
-          var object = {
+          object = {
             'id': 'Education',
             'value': resultados[3]
           };
           this.resultadoObject.push(object);
           break;
         case 4:
-          var object = {
+          object = {
             'id': 'Ethics & Democracy',
             'value': resultados[4]
           };
           this.resultadoObject.push(object);
           break;
         case 5:
-          var object = {
+          object = {
             'id': 'Geospatial',
             'value': resultados[5]
           };
           this.resultadoObject.push(object);
           break;
         case 6:
-          var object = {
+          object = {
             'id': 'Health',
             'value': resultados[6]
           };
           this.resultadoObject.push(object);
           break;
         case 7:
-          var object = {
+          object = {
             'id': 'Recreation & Culture',
             'value': resultados[7]
           };
@@ -533,7 +269,7 @@ export class EjecucionComponent implements OnInit {
           break;
 
         case 8:
-          var object = {
+          object = {
             'id': 'Safety',
             'value': resultados[8]
           };
@@ -541,7 +277,7 @@ export class EjecucionComponent implements OnInit {
           break;
 
         case 9:
-          var object = {
+          object = {
             'id': 'Services',
             'value': resultados[9]
           };
@@ -549,7 +285,7 @@ export class EjecucionComponent implements OnInit {
           break;
 
         case 10:
-          var object = {
+          object = {
             'id': 'Sustainability',
             'value': resultados[10]
           };
@@ -559,7 +295,7 @@ export class EjecucionComponent implements OnInit {
 
 
         case 11:
-          var object = {
+          object = {
             'id': 'Transport & Infrastructure',
             'value': resultados[11]
           };
@@ -567,7 +303,7 @@ export class EjecucionComponent implements OnInit {
           break;
 
         case 12:
-          var object = {
+          object = {
             'id': 'Urban Planning & Housing',
             'value': resultados[12]
           };
@@ -575,7 +311,7 @@ export class EjecucionComponent implements OnInit {
           break;
 
         case 13:
-          var object = {
+          object = {
             'id': 'Welfare',
             'value': resultados[13]
           };

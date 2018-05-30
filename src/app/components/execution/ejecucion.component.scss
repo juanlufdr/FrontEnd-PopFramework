@@ -1,30 +1,65 @@
-#ejecucion{
-    font-size: 20px;
+#ejecucion {
+  font-size: 20px;
+}
+
+#select_ejecucion {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#info h3 {
+  text-align: left;
+}
+
+#cell-disabled {
+  background: #CCCCCC;
+}
+
+#fullCell {
+  text-align-last: center;
+  width: 100%;
+}
+
+table tr:nth-child(odd) {
+  background-color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #eaeaea;
+}
+
+#table_row {
+  width: 70% !important;
+}
+
+#table_column {
+  width: 10% !important;
+}
+
+.background_blue {
+  background: #1D8BF1;
+  color: white;
+}
+
+.loadingAction {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@keyframes ui-progress-spinner-color {
+  100%,
+  0% {
+    stroke: #1D8BF1;
   }
-  
-  #select_ejecucion{
-    margin-bottom: 20px;
-    text-align: center;
+  40% {
+    stroke: #1D8BF1;
   }
-  
-  
-  #info h3{
-    text-align: left;
+  66% {
+    stroke: #1D8BF1;
   }
-  
-  #cell-disabled{
-    background: #CCCCCC;
+  80%,
+  90% {
+    stroke: #1D8BF1;
   }
-  #fullCell{
-    text-align-last: center;
-    width: 100%;
-  }
-  
-  #table_row{
-    width:  70% !important;
-  
-  }
-  
-  #table_column{
-    width:10% !important;
-  }
+}
