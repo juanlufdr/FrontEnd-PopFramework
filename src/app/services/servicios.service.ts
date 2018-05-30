@@ -18,22 +18,11 @@ export class PeticionesService {
 
   }
 
-  // getReferecences() {
-  //   return this._http.request("../../assets/json/references.json")
-  //     .map(respuestaOK => respuestaOK.json());
-  // }
-
-  // getCharacteristics() {
-  //   return this._http.request("../../assets/json/characteristics.json")
-  //     .map(respuestaOK => respuestaOK.json());
-  // }
-
   getReferenceAndCharacteristics() {
     return Observable.forkJoin(
       this.getReferecencesRemote(),
       this.getCharacteristicsRemote()
     );
-    // .map(res => this.join(res[0], res[1]));
   }
 
   join(references, characteristics) {
